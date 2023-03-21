@@ -1,63 +1,63 @@
-# import the pygame module
 import pygame
- 
-# import pygame.locals for easier
-# access to key coordinates
 from pygame.locals import *
- 
-# Define our square object and call super to
-# give it all the properties and methods of pygame.sprite.Sprite
-# Define the class for our square objects
-class Square(pygame.sprite.Sprite):
-    def __init__(self):
-        super(Square, self).__init__()
-         
-        # Define the dimension of the surface
-        # Here we are making squares of side 25px
-        self.surf = pygame.Surface((25, 25))
-         
-        # Define the color of the surface using RGB color coding.
-        self.surf.fill((0, 200, 255))
-        self.rect = self.surf.get_rect()
- 
-# initialize pygame
+from pynput import keyboard
+import time
+
 pygame.init()
- 
-# Define the dimensions of screen object
-screen = pygame.display.set_mode((800, 600))
- 
-# instantiate all square objects
-square1 = Square()
-square2 = Square()
-square3 = Square()
-square4 = Square()
- 
-# Variable to keep our game loop running
-gameOn = True
- 
-# Our game loop
-while gameOn:
-    # for loop through the event queue
+
+screen = pygame.display.set_mode((911, 911))
+
+pygame.display.set_caption('My Game')
+
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+GREEN = (0, 255, 0)
+
+running = True
+
+#x, y cua người chơi
+bot = [0, 0]
+
+while running:
+    screen.fill(BLACK)
+
+    #draw grid
+    for i in range(26):
+        pygame.draw.line(screen, WHITE, (0, 70 * i), (910, 70 * i))
+        pygame.draw.line(screen, WHITE, (i * 70, 0), (i * 70, 910))
+    
+    #draw human
+    pygame.draw.rect(screen, GREEN, (bot[0] * 35, bot[1] * 35, 70, 70))
+
     for event in pygame.event.get():
-         
-        # Check for KEYDOWN event
-        if event.type == KEYDOWN:
-             
-            # If the Backspace key has been pressed set
-            # running to false to exit the main loop
-            if event.key == K_BACKSPACE:
-                gameOn = False
-                 
-        # Check for QUIT event
-        elif event.type == QUIT:
-            gameOn = False
- 
-    # Define where the squares will appear on the screen
-    # Use blit to draw them on the screen surface
-    screen.blit(square1.surf, (40, 40))
-    screen.blit(square2.surf, (40, 530))
-    screen.blit(square3.surf, (730, 40))
-    screen.blit(square4.surf, (730, 530))
- 
-    # Update the display using flip
+        if event.type == pygame.QUIT:
+            running = False
+
+        if event.type == VIDEORESIZE:
+            screen = pygame.display.set_mode((event.w, event.h), RESIZABLE)
+        
+        if event.type == pygame.KEYDOWN:
+            if (event.key == pygame.K_UP):
+                if bot[1] > 0:
+                    bot[1] = bot[1] - 1
+                    print("up")
+            elif (event.key == pygame.K_DOWN):
+                if bot[1] < 24:
+                    bot[1] = bot[1] + 1
+                    print("down")
+
+            elif (event.key == pygame.K_LEFT):
+                if bot[0] > 0:
+                    bot[0] = bot[0] - 1
+                    print("left")
+
+            elif (event.key == pygame.K_RIGHT):
+                if bot[0] < 24:
+                    bot[0] = bot[0] + 1 
+                    print("right")
+
+
     pygame.display.flip()
+
+
+pygame.quit()
