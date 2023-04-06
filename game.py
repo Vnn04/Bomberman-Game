@@ -26,12 +26,17 @@ BLUE = (0,0,255)
 background_image = pygame.image.load(r"C:\Users\nguye\Documents\Bomberman\Choi\Bomberman\background.png")
 background_image = pygame.transform.scale(background_image, (WIDTH, HEIGHT))
 player_image = pygame.image.load(r"C:\Users\nguye\Documents\Bomberman\Choi\Bomberman\player.png")
-player_image = pygame.transform.scale(player_image, (50, 55))
+player_image = pygame.transform.scale(player_image, (45, 50))
 bomb_image = pygame.image.load(r"C:\Users\nguye\Documents\Bomberman\Choi\Bomberman\bomb.png")
 bomb_image = pygame.transform.scale(bomb_image, (45, 45))
+wall_image = pygame.image.load(r"C:\Users\nguye\Documents\Bomberman\wall.png")
+wall_image = pygame.transform.scale(wall_image, (50, 50))
 
 # Initialize font
 font_small = pygame.font.SysFont('sans', 10)
+
+#wall list
+wall_list = [(17, 387), (20, 190), (67, 440), (70, 238), (118, 85), (118, 190), (118, 287), (118, 387), (120, 490), (168, 140), (168, 542), (170, 40), (170, 335), (218, 87), (220, 490), (222, 287), (270, 135), (270, 236), (273, 338), (320, 187), (323, 288), (323, 387), (323, 490), (375, 135), (375, 339), (375, 540), (374, 441), (425, 87), (425, 188), (425, 388), (475, 340), (476, 238), (477, 36), (525, 188), (525, 490), (576, 338), (578, 438), (579, 540), (580, 34), (627, 187), (627, 287), (627, 389), (628, 187), (630, 84), (680, 140), (680, 240), (680, 439), (728, 490), (730, 188), (730, 386), (732, 90), (781, 541), (782, 38), (783, 140), (783, 339), (785, 238), (833, 189), (833, 390)]
 
 # Define Player class
 class Player:
@@ -59,6 +64,7 @@ class Player:
     def draw(self, screen):
         screen.blit(self.image, (self.x, self.y))
 
+# define bomb class
 class Bomb:
     def __init__(self, x, y, image):
         self.x = x
@@ -69,12 +75,27 @@ class Bomb:
     def draw(self, screen):
         screen.blit(self.image, (self.x, self.y))
 
+# define wall class
+class Wall:
+    def __init__(self, x, y, image):
+        self.x = x
+        self.y = y
+        self.image = image
+
+    def draw(self, screen):
+        screen.blit(self.image, (self.x, self.y))
 
 # Initialize player object
 player = Player(17, 35, player_image)
 
 # Initialize bomb object
 bomb = None
+
+# Initialize wall objects
+wall_objects = []
+for wall_pos in wall_list:
+    wall = Wall(wall_pos[0], wall_pos[1], wall_image)
+    wall_objects.append(wall)
 
 # Initialize screen
 pygame.display.set_caption("Bomberman")
@@ -109,6 +130,10 @@ while running:
         if pygame.time.get_ticks() > bomb.explode_time:  # explode bomb after 5 seconds
             bomb = None
     player.draw(screen)
+    
+    # Draw wall objects
+    for wall in wall_objects:
+        wall.draw(screen)
 
     mouse_x, mouse_y = pygame.mouse.get_pos()
     text_mouse = font_small.render("(" + str(mouse_x) + "," + str(mouse_y) + ")", True, BLACK)
