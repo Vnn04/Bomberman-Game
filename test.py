@@ -8,6 +8,8 @@ pygame.init()
 WIDTH = 900
 HEIGHT = 600
 PLAYER_SPEED = 51
+player_start_x = 17
+player_start_y = 35
 
 # game space
 LEFT = 45
@@ -36,7 +38,17 @@ wall_image = pygame.transform.scale(wall_image, (50, 50))
 font_small = pygame.font.SysFont('sans', 10)
 
 #wall list
-wall_list = [(17, 387), (20, 190), (67, 440), (70, 238), (118, 85), (118, 190), (118, 287), (118, 387), (120, 490), (168, 140), (168, 542), (170, 40), (170, 335), (218, 87), (220, 490), (222, 287), (270, 135), (270, 236), (273, 338), (320, 187), (323, 288), (323, 387), (323, 490), (375, 135), (375, 339), (375, 540), (374, 441), (425, 87), (425, 188), (425, 388), (475, 340), (476, 238), (477, 36), (525, 188), (525, 490), (576, 338), (578, 438), (579, 540), (580, 34), (627, 187), (627, 287), (627, 389), (628, 187), (630, 84), (680, 140), (680, 240), (680, 439), (728, 490), (730, 188), (730, 386), (732, 90), (781, 541), (782, 38), (783, 140), (783, 339), (785, 238), (833, 189), (833, 390)]
+wall_list = [(18, 188), (18, 392), (68, 239), (68, 443), (118, 86), (118, 188), (118, 290), (118, 392), (118, 493), (168, 35), (168, 137), (168, 341), (168, 543), (219, 86), (219, 290), (219, 493), (269, 137), (269, 239), (269, 341), (321, 188), (321, 290), (321, 392), (321, 493), (371, 137), (371, 341), (371, 443), (371, 543), (423, 86), (423, 188), (423, 392), (474, 35), (474, 239), (474, 341), (524, 188), (524, 493), (576, 35), (576, 341), (576, 443), (576, 543), (628, 86), (628, 188), (628, 290), (628, 392), (680, 137), (680, 239), (680, 443), (732, 86), (732, 188), (732, 392), (732, 493), (783, 35), (783, 137), (783, 239), (783, 341), (783, 543), (834, 188), (834, 392)]
+blocked_coordinates = []
+
+for i in range(10):
+    for j in range(16):
+        is_blocked = True
+        for wall in wall_list:
+            if player_start_x + (i + 1) * 51 >= wall[0] and player_start_x + i * 51 < wall[0] + 51 and player_start_y + (j + 1) * 51 >= wall[1] and player_start_y + j * 51 <= wall[1] + 51:
+                is_blocked = False
+        if is_blocked:
+            blocked_coordinates.append((player_start_x + (i + 1) * 51, player_start_y + (j + 1) * 51))
 
 # Define Player class
 class Player:
@@ -46,19 +58,27 @@ class Player:
         self.image = image
 
     def move_up(self):
-        if self.y > UP and (self.x - 17) / PLAYER_SPEED % 2 == 0:
+        if (self.x, self.y - 51) in blocked_coordinates:
+            print("Can't move!")
+        elif self.y > UP and (self.x - 17) / PLAYER_SPEED % 2 == 0:
             self.y -= PLAYER_SPEED
 
     def move_down(self):
-        if self.y < DOWN and (self.x - 17) / PLAYER_SPEED % 2 == 0:
+        if (self.x, self.y + 51) in blocked_coordinates:
+            print("Can't move!")
+        elif self.y < DOWN and (self.x - 17) / PLAYER_SPEED % 2 == 0:
             self.y += PLAYER_SPEED
 
     def move_left(self):
-        if self.x > LEFT and (self.y - 35) / PLAYER_SPEED % 2 == 0:
+        if (self.x - 51, self.y) in blocked_coordinates:
+            print("Can't move!")
+        elif self.x > LEFT and (self.y - 35) / PLAYER_SPEED % 2 == 0:
             self.x -= PLAYER_SPEED
 
-    def move_right(self) :
-        if self.x < RIGHT and (self.y - 35) / PLAYER_SPEED % 2 == 0:
+    def move_right(self):
+        if (self.x + 52, self.y) in blocked_coordinates:
+            print("Can't move!")
+        elif self.x < RIGHT and (self.y - 35) / PLAYER_SPEED % 2 == 0:
             self.x += PLAYER_SPEED
 
     def draw(self, screen):
@@ -86,7 +106,7 @@ class Wall:
         screen.blit(self.image, (self.x, self.y))
 
 # Initialize player object
-player = Player(17, 35, player_image)
+player = Player(player_start_x, player_start_y, player_image)
 
 # Initialize bomb object
 bomb = None
