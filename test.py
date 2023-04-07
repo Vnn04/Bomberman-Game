@@ -25,13 +25,13 @@ RED = (255,0,0)
 BLUE = (0,0,255)
 
 # Load images
-background_image = pygame.image.load(r"C:\Users\nguye\Documents\Bomberman\background.png")
+background_image = pygame.image.load(r"C:\Users\nguye\Documents\Bomberman\picture\background.png")
 background_image = pygame.transform.scale(background_image, (WIDTH, HEIGHT))
-player_image = pygame.image.load(r"C:\Users\nguye\Documents\Bomberman\player.png")
+player_image = pygame.image.load(r"C:\Users\nguye\Documents\Bomberman\picture\player.png")
 player_image = pygame.transform.scale(player_image, (45, 50))
-bomb_image = pygame.image.load(r"C:\Users\nguye\Documents\Bomberman\bomb.png")
+bomb_image = pygame.image.load(r"C:\Users\nguye\Documents\Bomberman\picture\bomb.png")
 bomb_image = pygame.transform.scale(bomb_image, (45, 45))
-wall_image = pygame.image.load(r"C:\Users\nguye\Documents\Bomberman\wall.png")
+wall_image = pygame.image.load(r"C:\Users\nguye\Documents\Bomberman\picture\wall.png")
 wall_image = pygame.transform.scale(wall_image, (50, 50))
 
 # Initialize font
