@@ -33,6 +33,8 @@ bomb_image = pygame.image.load(r"C:\Users\nguye\Documents\Bomberman\picture\bomb
 bomb_image = pygame.transform.scale(bomb_image, (45, 45))
 wall_image = pygame.image.load(r"C:\Users\nguye\Documents\Bomberman\picture\wall.png")
 wall_image = pygame.transform.scale(wall_image, (50, 50))
+explosion_image = pygame.image.load(r"C:\Users\nguye\Documents\Bomberman\picture\explosion.png")
+explosion_image = pygame.transform.scale(explosion_image, (51, 51))
 
 # Initialize font
 font_small = pygame.font.SysFont('sans', 10)
@@ -112,6 +114,18 @@ class Bomb:
     def draw(self, screen):
         screen.blit(self.image, (self.x, self.y))
 
+# define explosion
+class Explosion:
+    def __init__(self, x, y, image):
+        self.x = x
+        self.y = y
+        self.image = image
+        self.explosion_time = pygame.time.get_ticks() + 500 #set 0.5 second timer
+
+    def draw(self, screen):
+        screen.blit(self.image, (self.x, self.y))
+
+        
 # define wall class
 class Wall:
     def __init__(self, x, y, image):
@@ -122,11 +136,15 @@ class Wall:
     def draw(self, screen):
         screen.blit(self.image, (self.x, self.y))
 
+
 # Initialize player object
 player = Player(player_start_x, player_start_y, player_image)
 
 # Initialize bomb object
 bomb = None
+
+# Initialize the explosion object
+explosion = None
 
 # Initialize wall objects
 wall_objects = []
@@ -157,15 +175,24 @@ while running:
             elif event.key == pygame.K_RIGHT:
                 player.move_right()
             elif event.key == pygame.K_SPACE and not bomb:  # create bomb when space key is pressed
+                explosion = Explosion(player.x, player.y, explosion_image)
                 bomb = Bomb(player.x, player.y, bomb_image)
 
 
     # Draw images and text
     screen.blit(background_image, (0, 0))
+
+    if explosion:
+        if pygame.time.get_ticks() > 3000:
+            explosion.draw(screen)
+        if pygame.time.get_ticks() > explosion.explosion_time:
+            explosion = None
+    
     if bomb:
         bomb.draw(screen)
-        if pygame.time.get_ticks() > bomb.explode_time:  # explode bomb after 5 seconds
+        if pygame.time.get_ticks() > bomb.explode_time:  # explode bomb after 3 seconds
             bomb = None
+        
     player.draw(screen)
     
     # Draw wall objects
