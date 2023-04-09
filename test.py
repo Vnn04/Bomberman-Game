@@ -13,9 +13,9 @@ player_start_x = 17
 player_start_y = 35
 
 # game space
-LEFT = 45
+LEFT = 17
 RIGHT = 800
-UP = 60
+UP = 35
 DOWN = 500
 
 # Basic color
@@ -110,19 +110,38 @@ class Bomb:
         self.x = x
         self.y = y
         self.image = image
-        self.explode_time = pygame.time.get_ticks() + 4000  # set 5 seconds timer
+        self.explode_time = pygame.time.get_ticks() + 2000  # set 2 seconds timer
         self.exploded = False
+        self.neighbor_explosions = []
+
+    def calculate_neighbor_explosions(self):
+        neighbors = [(self.x - PLAYER_SPEED, self.y),
+                     (self.x - PLAYER_SPEED * 2, self.y), 
+                     (self.x + PLAYER_SPEED, self.y), 
+                     (self.x + PLAYER_SPEED * 2, self.y),
+                     (self.x, self.y + PLAYER_SPEED),
+                     (self.x, self.y + PLAYER_SPEED * 2),
+                     (self.x, self.y - PLAYER_SPEED),
+                     (self.x, self.y - PLAYER_SPEED * 2)]
+        for neighbor in neighbors:
+            x, y = neighbor
+            if LEFT - 1 <= x <= RIGHT and UP - 1 <= y <= DOWN:
+                self.neighbor_explosions.append((x, y))
 
     def draw(self, screen):
         if not self.exploded:
             screen.blit(self.image, (self.x, self.y))
-            if pygame.time.get_ticks() > self.explode_time:  # explode bomb after 5 seconds
+            if pygame.time.get_ticks() > self.explode_time:  # explode bomb after 2 seconds
                 self.image = explosion_image
-                self.explode_time = pygame.time.get_ticks() + 800  # set 1 second timer for flame
+                self.explode_time = pygame.time.get_ticks() + 300  # set 300ms timer for flame
                 self.exploded = True
+                self.calculate_neighbor_explosions()
         else:
-            if pygame.time.get_ticks() > self.explode_time:  # remove flame after 1 second
+            if pygame.time.get_ticks() > self.explode_time:  # remove flame after 300ms
                 self.image = None
+            else:
+                for exploosion_pos in self.neighbor_explosions:
+                    screen.blit(self.image, exploosion_pos)
 
         if self.image:
             screen.blit(self.image, (self.x, self.y))
@@ -182,16 +201,16 @@ while running:
     # Draw images and text
     screen.blit(background_image, (0, 0))
 
-    if bomb:
-        bomb.draw(screen)
-        if pygame.time.get_ticks() > bomb.explode_time:  # explode bomb after 3 seconds
-            bomb = None
-        
-    player.draw(screen)
-    
     # Draw wall objects
     for wall in wall_objects:
         wall.draw(screen)
+        
+    if bomb:
+        bomb.draw(screen)
+        if pygame.time.get_ticks() > bomb.explode_time:  # explode bomb after 2 seconds
+            bomb = None
+
+    player.draw(screen)
 
     # print the cursor coordinates to the screen
     mouse_x, mouse_y = pygame.mouse.get_pos()
