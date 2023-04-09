@@ -78,6 +78,16 @@ blocked_coordinates = [(17, 188), (17, 392),
                        (782, 35), (782, 137), (782, 239), (782, 341), (782, 545), 
                        (833, 188), (833, 392)]
 
+def delete_wall(test_x, test_y):
+        x = 0
+        y = 0
+        if (test_x, test_y) in blocked_coordinates:
+            for wall in wall_list:
+                if test_x >= wall[0] and test_x <= wall[0] + 51 and test_y >= wall[1] and test_y <= wall[1] + 51:
+                    x = wall[0]
+                    y = wall[1]
+            wall_list.remove((x, y))
+
 # Define Player class
 class Player:
     def __init__(self, x, y, image):
@@ -115,18 +125,87 @@ class Bomb:
         self.neighbor_explosions = []
 
     def calculate_neighbor_explosions(self):
-        neighbors = [(self.x - PLAYER_SPEED, self.y),
-                     (self.x - PLAYER_SPEED * 2, self.y), 
-                     (self.x + PLAYER_SPEED, self.y), 
-                     (self.x + PLAYER_SPEED * 2, self.y),
-                     (self.x, self.y + PLAYER_SPEED),
-                     (self.x, self.y + PLAYER_SPEED * 2),
-                     (self.x, self.y - PLAYER_SPEED),
-                     (self.x, self.y - PLAYER_SPEED * 2)]
+        neighbors = []
+        if ((self.x + PLAYER_SPEED, self.y) not in blocked_coordinates) and ((self.x - PLAYER_SPEED, self.y) not in blocked_coordinates) and ((self.x, self.y + PLAYER_SPEED) not in blocked_coordinates) and ((self.x, self.y - PLAYER_SPEED) not in blocked_coordinates):
+            neighbors.append((self.x + PLAYER_SPEED, self.y))
+            neighbors.append((self.x + PLAYER_SPEED * 2, self.y))
+            neighbors.append((self.x - PLAYER_SPEED, self.y))
+            neighbors.append((self.x - PLAYER_SPEED * 2, self.y))
+            neighbors.append((self.x, self.y + PLAYER_SPEED))
+            neighbors.append((self.x, self.y + PLAYER_SPEED * 2))
+            neighbors.append((self.x, self.y - PLAYER_SPEED))
+            neighbors.append((self.x, self.y - PLAYER_SPEED * 2))
+            if (self.x + 2 * PLAYER_SPEED, self.y) in blocked_coordinates:
+                delete_wall(self.x + PLAYER_SPEED * 2, self.y)
+            if (self.x - 2 * PLAYER_SPEED, self.y) in blocked_coordinates:
+                delete_wall(self.x - PLAYER_SPEED * 2, self.y)
+            if (self.x, self.y + 2 * PLAYER_SPEED) in blocked_coordinates:
+                delete_wall(self.x, self.y + PLAYER_SPEED * 2)
+            if (self.x + 2 * PLAYER_SPEED, self.y) in blocked_coordinates:
+                delete_wall(self.x, self.y * PLAYER_SPEED * 2)
+
+        if ((self.x + PLAYER_SPEED, self.y) in blocked_coordinates) and ((self.x - PLAYER_SPEED, self.y) not in blocked_coordinates):
+            neighbors.append((self.x + PLAYER_SPEED, self.y))
+            neighbors.append((self.x - PLAYER_SPEED, self.y))
+            neighbors.append((self.x - PLAYER_SPEED * 2, self.y))
+            delete_wall((self.x + PLAYER_SPEED, self.y))
+            if (self.x, self.y + PLAYER_SPEED) in blocked_coordinates:
+                neighbors.append((self.x, self.y + PLAYER_SPEED))
+                delete_wall(self.x, self.y + PLAYER_SPEED)
+            else:
+                neighbors.append((self.x, self.y + PLAYER_SPEED))
+                neighbors.append((self.x, self.y + PLAYER_SPEED * 2))
+                if (self.x, self.y + PLAYER_SPEED * 2) in blocked_coordinates:
+                    delete_wall(self.x, self.y + PLAYER_SPEED * 2)
+            
+            if (self.x, self.y - PLAYER_SPEED) in blocked_coordinates:
+                neighbors.append((self.x, self.y - PLAYER_SPEED))
+                delete_wall(self.x, self.y - PLAYER_SPEED)
+            else:
+                neighbors.append((self.x, self.y - PLAYER_SPEED))
+                neighbors.append((self.x, self.y - PLAYER_SPEED * 2))
+                if (self.x, self.y - PLAYER_SPEED * 2) in blocked_coordinates:
+                    delete_wall(self.x, self.y - PLAYER_SPEED * 2)
+
+
+        if ((self.x - PLAYER_SPEED, self.y) in blocked_coordinates) and (self.x + PLAYER_SPEED, self.y) not in blocked_coordinates:
+            neighbors.append((self.x - PLAYER_SPEED, self.y))
+            neighbors.append((self.x + PLAYER_SPEED, self.y))
+            neighbors.append((self.x + PLAYER_SPEED * 2, self.y))
+            if (self.x, self.y + PLAYER_SPEED) in blocked_coordinates:
+                neighbors.append((self.x, self.y + PLAYER_SPEED))
+            else:
+                neighbors.append((self.x, self.y + PLAYER_SPEED))
+                neighbors.append((self.x, self.y + PLAYER_SPEED * 2))
+            
+            if (self.x, self.y - PLAYER_SPEED) in blocked_coordinates:
+                neighbors.append((self.x, self.y - PLAYER_SPEED))
+            else:
+                neighbors.append((self.x, self.y - PLAYER_SPEED))
+                neighbors.append((self.x, self.y - PLAYER_SPEED * 2))
+        
+        if ((self.x - PLAYER_SPEED, self.y) in blocked_coordinates) and ((self.x + PLAYER_SPEED, self.y) in blocked_coordinates):
+            neighbors.append((self.x - PLAYER_SPEED, self.y))
+            neighbors.append((self.x + PLAYER_SPEED, self.y))
+            if (self.x, self.y + PLAYER_SPEED) in blocked_coordinates:
+                neighbors.append((self.x, self.y + PLAYER_SPEED))
+            else:
+                neighbors.append((self.x, self.y + PLAYER_SPEED))
+                neighbors.append((self.x, self.y + PLAYER_SPEED * 2))
+            
+            if (self.x, self.y - PLAYER_SPEED) in blocked_coordinates:
+                neighbors.append((self.x, self.y - PLAYER_SPEED))
+            else:
+                neighbors.append((self.x, self.y - PLAYER_SPEED))
+                neighbors.append((self.x, self.y - PLAYER_SPEED * 2))
+            
         for neighbor in neighbors:
             x, y = neighbor
-            if LEFT - 1 <= x <= RIGHT and UP - 1 <= y <= DOWN:
+            if LEFT <= x <= RIGHT and UP <= y <= DOWN and (self.x - 17) / PLAYER_SPEED % 2 == 0:
                 self.neighbor_explosions.append((x, y))
+            elif self.y == y and LEFT <= x <= RIGHT and UP <= y <= DOWN:
+                self.neighbor_explosions.append((x, y))
+
 
     def draw(self, screen):
         if not self.exploded:
