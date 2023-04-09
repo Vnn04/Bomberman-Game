@@ -193,6 +193,7 @@ while running:
     for wall in wall_objects:
         wall.draw(screen)
 
+    # print the cursor coordinates to the screen
     mouse_x, mouse_y = pygame.mouse.get_pos()
     text_mouse = font_small.render("(" + str(mouse_x) + "," + str(mouse_y) + ")", True, BLACK)
     screen.blit(text_mouse, (mouse_x + 10, mouse_y))
