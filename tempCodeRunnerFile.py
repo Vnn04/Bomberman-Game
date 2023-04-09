@@ -151,14 +151,14 @@ class Bomb:
             elif (self.x, self.y + PLAYER_SPEED) not in blocked_coordinates and (self.x, self.y - PLAYER_SPEED) in blocked_coordinates:
                 neighbors.append((self.x, self.y - PLAYER_SPEED))
                 if (self.x, self.y + PLAYER_SPEED) not in all_row_and_cloumn:
-                    neighbors.append((self.x, self.y - PLAYER_SPEED))
+                    neighbors.append((self.x, self.y + PLAYER_SPEED))
                     if (self.x, self.y + PLAYER_SPEED * 2) not in all_row_and_cloumn:
-                        neighbors.append((self.x, self.y - PLAYER_SPEED * 2))
+                        neighbors.append((self.x, self.y + PLAYER_SPEED * 2))
             elif (self.x, self.y + PLAYER_SPEED) not in blocked_coordinates and (self.x, self.y - PLAYER_SPEED) not in blocked_coordinates:
                 if (self.x, self.y + PLAYER_SPEED) not in all_row_and_cloumn:
-                    neighbors.append((self.x, self.y - PLAYER_SPEED))
+                    neighbors.append((self.x, self.y + PLAYER_SPEED))
                     if (self.x, self.y + PLAYER_SPEED * 2) not in all_row_and_cloumn:
-                        neighbors.append((self.x, self.y - PLAYER_SPEED * 2))
+                        neighbors.append((self.x, self.y + PLAYER_SPEED * 2))
                 if (self.x, self.y - PLAYER_SPEED) not in all_row_and_cloumn:
                     neighbors.append((self.x, self.y - PLAYER_SPEED))
                     if (self.x, self.y - PLAYER_SPEED * 2) not in all_row_and_cloumn:
@@ -182,14 +182,14 @@ class Bomb:
             elif (self.x, self.y + PLAYER_SPEED) not in blocked_coordinates and (self.x, self.y - PLAYER_SPEED) in blocked_coordinates:
                 neighbors.append((self.x, self.y - PLAYER_SPEED))
                 if (self.x, self.y + PLAYER_SPEED) not in all_row_and_cloumn:
-                    neighbors.append((self.x, self.y - PLAYER_SPEED))
+                    neighbors.append((self.x, self.y + PLAYER_SPEED))
                     if (self.x, self.y + PLAYER_SPEED * 2) not in all_row_and_cloumn:
-                        neighbors.append((self.x, self.y - PLAYER_SPEED * 2))
+                        neighbors.append((self.x, self.y + PLAYER_SPEED * 2))
             elif (self.x, self.y + PLAYER_SPEED) not in blocked_coordinates and (self.x, self.y - PLAYER_SPEED) not in blocked_coordinates:
                 if (self.x, self.y + PLAYER_SPEED) not in all_row_and_cloumn:
-                    neighbors.append((self.x, self.y - PLAYER_SPEED))
+                    neighbors.append((self.x, self.y + PLAYER_SPEED))
                     if (self.x, self.y + PLAYER_SPEED * 2) not in all_row_and_cloumn:
-                        neighbors.append((self.x, self.y - PLAYER_SPEED * 2))
+                        neighbors.append((self.x, self.y + PLAYER_SPEED * 2))
                 if (self.x, self.y - PLAYER_SPEED) not in all_row_and_cloumn:
                     neighbors.append((self.x, self.y - PLAYER_SPEED))
                     if (self.x, self.y - PLAYER_SPEED * 2) not in all_row_and_cloumn:
@@ -213,14 +213,14 @@ class Bomb:
             elif (self.x, self.y + PLAYER_SPEED) not in blocked_coordinates and (self.x, self.y - PLAYER_SPEED) in blocked_coordinates:
                 neighbors.append((self.x, self.y - PLAYER_SPEED))
                 if (self.x, self.y + PLAYER_SPEED) not in all_row_and_cloumn:
-                    neighbors.append((self.x, self.y - PLAYER_SPEED))
+                    neighbors.append((self.x, self.y + PLAYER_SPEED))
                     if (self.x, self.y + PLAYER_SPEED * 2) not in all_row_and_cloumn:
-                        neighbors.append((self.x, self.y - PLAYER_SPEED * 2))
+                        neighbors.append((self.x, self.y + PLAYER_SPEED * 2))
             elif (self.x, self.y + PLAYER_SPEED) not in blocked_coordinates and (self.x, self.y - PLAYER_SPEED) not in blocked_coordinates:
                 if (self.x, self.y + PLAYER_SPEED) not in all_row_and_cloumn:
-                    neighbors.append((self.x, self.y - PLAYER_SPEED))
+                    neighbors.append((self.x, self.y + PLAYER_SPEED))
                     if (self.x, self.y + PLAYER_SPEED * 2) not in all_row_and_cloumn:
-                        neighbors.append((self.x, self.y - PLAYER_SPEED * 2))
+                        neighbors.append((self.x, self.y + PLAYER_SPEED * 2))
                 if (self.x, self.y - PLAYER_SPEED) not in all_row_and_cloumn:
                     neighbors.append((self.x, self.y - PLAYER_SPEED))
                     if (self.x, self.y - PLAYER_SPEED * 2) not in all_row_and_cloumn:
@@ -247,14 +247,14 @@ class Bomb:
             elif (self.x, self.y + PLAYER_SPEED) not in blocked_coordinates and (self.x, self.y - PLAYER_SPEED) in blocked_coordinates:
                 neighbors.append((self.x, self.y - PLAYER_SPEED))
                 if (self.x, self.y + PLAYER_SPEED) not in all_row_and_cloumn:
-                    neighbors.append((self.x, self.y - PLAYER_SPEED))
+                    neighbors.append((self.x, self.y + PLAYER_SPEED))
                     if (self.x, self.y + PLAYER_SPEED * 2) not in all_row_and_cloumn:
-                        neighbors.append((self.x, self.y - PLAYER_SPEED * 2))
+                        neighbors.append((self.x, self.y + PLAYER_SPEED * 2))
             elif (self.x, self.y + PLAYER_SPEED) not in blocked_coordinates and (self.x, self.y - PLAYER_SPEED) not in blocked_coordinates:
                 if (self.x, self.y + PLAYER_SPEED) not in all_row_and_cloumn:
-                    neighbors.append((self.x, self.y - PLAYER_SPEED))
+                    neighbors.append((self.x, self.y + PLAYER_SPEED))
                     if (self.x, self.y + PLAYER_SPEED * 2) not in all_row_and_cloumn:
-                        neighbors.append((self.x, self.y - PLAYER_SPEED * 2))
+                        neighbors.append((self.x, self.y + PLAYER_SPEED * 2))
                 if (self.x, self.y - PLAYER_SPEED) not in all_row_and_cloumn:
                     neighbors.append((self.x, self.y - PLAYER_SPEED))
                     if (self.x, self.y - PLAYER_SPEED * 2) not in all_row_and_cloumn:
