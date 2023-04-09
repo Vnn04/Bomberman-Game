@@ -79,14 +79,16 @@ blocked_coordinates = [(17, 188), (17, 392),
                        (833, 188), (833, 392)]
 
 def delete_wall(test_x, test_y):
-        x = 0
-        y = 0
+        x0 = 0
+        y0 = 0
         if (test_x, test_y) in blocked_coordinates:
             for wall in wall_list:
                 if test_x >= wall[0] and test_x <= wall[0] + 51 and test_y >= wall[1] and test_y <= wall[1] + 51:
-                    x = wall[0]
-                    y = wall[1]
-            wall_list.remove((x, y))
+                    x0 = wall[0]
+                    y0 = wall[1]
+            wall_list.remove((x0, y0))
+            blocked_coordinates.remove((test_x, test_y))
+            print(blocked_coordinates)
 
 # Define Player class
 class Player:
@@ -148,7 +150,7 @@ class Bomb:
             neighbors.append((self.x + PLAYER_SPEED, self.y))
             neighbors.append((self.x - PLAYER_SPEED, self.y))
             neighbors.append((self.x - PLAYER_SPEED * 2, self.y))
-            delete_wall((self.x + PLAYER_SPEED, self.y))
+            delete_wall(self.x + PLAYER_SPEED, self.y)
             if (self.x, self.y + PLAYER_SPEED) in blocked_coordinates:
                 neighbors.append((self.x, self.y + PLAYER_SPEED))
                 delete_wall(self.x, self.y + PLAYER_SPEED)
@@ -185,6 +187,21 @@ class Bomb:
                 neighbors.append((self.x, self.y - PLAYER_SPEED * 2))
         
         if ((self.x - PLAYER_SPEED, self.y) in blocked_coordinates) and ((self.x + PLAYER_SPEED, self.y) in blocked_coordinates):
+            neighbors.append((self.x - PLAYER_SPEED, self.y))
+            neighbors.append((self.x + PLAYER_SPEED, self.y))
+            if (self.x, self.y + PLAYER_SPEED) in blocked_coordinates:
+                neighbors.append((self.x, self.y + PLAYER_SPEED))
+            else:
+                neighbors.append((self.x, self.y + PLAYER_SPEED))
+                neighbors.append((self.x, self.y + PLAYER_SPEED * 2))
+            
+            if (self.x, self.y - PLAYER_SPEED) in blocked_coordinates:
+                neighbors.append((self.x, self.y - PLAYER_SPEED))
+            else:
+                neighbors.append((self.x, self.y - PLAYER_SPEED))
+                neighbors.append((self.x, self.y - PLAYER_SPEED * 2))
+        
+        if ((self.x - PLAYER_SPEED, self.y) not in blocked_coordinates) and ((self.x + PLAYER_SPEED, self.y) not in blocked_coordinates):
             neighbors.append((self.x - PLAYER_SPEED, self.y))
             neighbors.append((self.x + PLAYER_SPEED, self.y))
             if (self.x, self.y + PLAYER_SPEED) in blocked_coordinates:
