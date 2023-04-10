@@ -136,214 +136,55 @@ class Bomb:
 
     def calculate_neighbor_explosions(self):
         neighbors = []
-        if (self.x + PLAYER_SPEED, self.y) in blocked_coordinates and (self.x - PLAYER_SPEED, self.y) in blocked_coordinates:
+        
+        if (self.x + PLAYER_SPEED, self. y) in all_row_and_cloumn or (self.x - PLAYER_SPEED, self.y) in all_row_and_cloumn:
+            neighbors.append((self.x, self.y + PLAYER_SPEED))
+            neighbors.append((self.x, self.y - PLAYER_SPEED))
+
+            if (self.x, self.y + PLAYER_SPEED) not in blocked_coordinates:
+                neighbors.append((self.x, self.y + PLAYER_SPEED * 2))
+
+            if (self.x, self.y - PLAYER_SPEED * 2) not in blocked_coordinates:
+                neighbors.append((self.x, self.y - PLAYER_SPEED * 2))
+
+        if ((self.x + PLAYER_SPEED, self.y) not in all_row_and_cloumn or (self.x - PLAYER_SPEED, self.y) not in all_row_and_cloumn) and ((self.x, self.y + PLAYER_SPEED) not in all_row_and_cloumn or (self.x, self.y - PLAYER_SPEED) not in all_row_and_cloumn):
             neighbors.append((self.x + PLAYER_SPEED, self.y))
             neighbors.append((self.x - PLAYER_SPEED, self.y))
-            self.delete_wall(self.x + PLAYER_SPEED, self.y)
-            self.delete_wall(self.x - PLAYER_SPEED, self.y)
+            neighbors.append((self.x, self.y + PLAYER_SPEED))
+            neighbors.append((self.x, self.y - PLAYER_SPEED))
 
-            if (self.x, self.y + PLAYER_SPEED) in blocked_coordinates and (self.x, self.y - PLAYER_SPEED) in blocked_coordinates:
-                neighbors.append((self.x, self.y + PLAYER_SPEED))
-                neighbors.append((self.x, self.y - PLAYER_SPEED))
-                self.delete_wall(self.x, self.y + PLAYER_SPEED)
-                self.delete_wall(self.x, self.y - PLAYER_SPEED)
-            elif (self.x, self.y + PLAYER_SPEED) in blocked_coordinates and (self.x, self.y - PLAYER_SPEED) not in blocked_coordinates:
-                neighbors.append((self.x, self.y + PLAYER_SPEED))
-                self.delete_wall(self.x, self.y + PLAYER_SPEED)
+            if (self.x + PLAYER_SPEED, self.y) not in blocked_coordinates:
+                neighbors.append((self.x + PLAYER_SPEED * 2, self.y))
+            if (self.x - PLAYER_SPEED, self.y) not in blocked_coordinates:
+                neighbors.append((self.x - PLAYER_SPEED * 2, self.y))
 
-                if (self.x, self.y - PLAYER_SPEED) not in all_row_and_cloumn:
-                    neighbors.append((self.x, self.y - PLAYER_SPEED))
-                    self.delete_wall(self.x, self.y - PLAYER_SPEED)
-                    if (self.x, self.y - PLAYER_SPEED * 2) not in all_row_and_cloumn:
-                        neighbors.append((self.x, self.y - PLAYER_SPEED * 2))
-                        self.delete_wall(self.x, self.y - PLAYER_SPEED * 2)
-            elif (self.x, self.y + PLAYER_SPEED) not in blocked_coordinates and (self.x, self.y - PLAYER_SPEED) in blocked_coordinates:
-                neighbors.append((self.x, self.y - PLAYER_SPEED))
-                self.delete_wall(self.x, self.y + PLAYER_SPEED)
+            if (self.x, self.y + PLAYER_SPEED) not in blocked_coordinates:
+                neighbors.append((self.x, self.y + PLAYER_SPEED * 2))
+            if (self.x, self.y + PLAYER_SPEED) not in blocked_coordinates:
+                neighbors.append((self.x, self.y + PLAYER_SPEED * 2))
 
-                if (self.x, self.y + PLAYER_SPEED) not in all_row_and_cloumn:
-                    neighbors.append((self.x, self.y + PLAYER_SPEED))
-                    self.delete_wall(self.x, self.y + PLAYER_SPEED)
-                    if (self.x, self.y + PLAYER_SPEED * 2) not in all_row_and_cloumn:
-                        neighbors.append((self.x, self.y + PLAYER_SPEED * 2))
-                        self.delete_wall(self.x, self.y + PLAYER_SPEED * 2)
-            elif (self.x, self.y + PLAYER_SPEED) not in blocked_coordinates and (self.x, self.y - PLAYER_SPEED) not in blocked_coordinates:
-                if (self.x, self.y + PLAYER_SPEED) not in all_row_and_cloumn:
-                    neighbors.append((self.x, self.y + PLAYER_SPEED))
-                    self.delete_wall(self.x, self.y + PLAYER_SPEED)
-                    if (self.x, self.y + PLAYER_SPEED * 2) not in all_row_and_cloumn:
-                        neighbors.append((self.x, self.y + PLAYER_SPEED * 2))
-                        self.delete_wall(self.x, self.y + PLAYER_SPEED * 2)
-
-                if (self.x, self.y - PLAYER_SPEED) not in all_row_and_cloumn:
-                    neighbors.append((self.x, self.y - PLAYER_SPEED))
-                    self.delete_wall(self.x, self.y - PLAYER_SPEED)
-                    if (self.x, self.y - PLAYER_SPEED * 2) not in all_row_and_cloumn:
-                        neighbors.append((self.x, self.y - PLAYER_SPEED * 2))
-                        self.delete_wall(self.x, self.y - PLAYER_SPEED * 2)
-        
-        elif (self.x + PLAYER_SPEED, self.y) not in blocked_coordinates and (self.x - PLAYER_SPEED, self.y) in blocked_coordinates:
-            neighbors.append((self.x - PLAYER_SPEED, self.y))
-            self.delete_wall(self.x - PLAYER_SPEED, self.y)
-
-            if (self.x + PLAYER_SPEED, self.y) not in all_row_and_cloumn:
-                neighbors.append((self.x + PLAYER_SPEED, self.y))
-                self.delete_wall(self.x + PLAYER_SPEED)
-                if (self.x + PLAYER_SPEED * 2, self.y) not in all_row_and_cloumn:
-                    neighbors.append((self.x + PLAYER_SPEED * 2, self.y))
-                    self.delete_wall(self.x + PLAYER_SPEED * 2, self.y)
-            if (self.x, self.y + PLAYER_SPEED) in blocked_coordinates and (self.x, self.y - PLAYER_SPEED) in blocked_coordinates:
-                neighbors.append((self.x, self.y + PLAYER_SPEED))
-                neighbors.append((self.x, self.y - PLAYER_SPEED))
-                self.delete_wall(self.x, self.y + PLAYER_SPEED)
-                self.delete_wall(self.x, self.y - PLAYER_SPEED)
-
-            elif (self.x, self.y + PLAYER_SPEED) in blocked_coordinates and (self.x, self.y - PLAYER_SPEED) not in blocked_coordinates:
-                neighbors.append((self.x, self.y + PLAYER_SPEED))
-                self.delete_wall(self.x, self.y + PLAYER_SPEED)
-
-                if (self.x, self.y - PLAYER_SPEED) not in all_row_and_cloumn:
-                    neighbors.append((self.x, self.y - PLAYER_SPEED))
-                    self.delete_wall(self.x, self.y - PLAYER_SPEED)
-                    if (self.x, self.y - PLAYER_SPEED * 2) not in all_row_and_cloumn:
-                        neighbors.append((self.x, self.y - PLAYER_SPEED * 2))
-                        self.delete_wall(self.x, self.y - PLAYER_SPEED * 2)
-            elif (self.x, self.y + PLAYER_SPEED) not in blocked_coordinates and (self.x, self.y - PLAYER_SPEED) in blocked_coordinates:
-                neighbors.append((self.x, self.y - PLAYER_SPEED))
-                self.delete_wall(self.x, self.y + PLAYER_SPEED)
-
-                if (self.x, self.y + PLAYER_SPEED) not in all_row_and_cloumn:
-                    neighbors.append((self.x, self.y + PLAYER_SPEED))
-                    self.delete_wall(self.x, self.y + PLAYER_SPEED)
-                    if (self.x, self.y + PLAYER_SPEED * 2) not in all_row_and_cloumn:
-                        neighbors.append((self.x, self.y + PLAYER_SPEED * 2))
-                        self.delete_wall(self.x, self.y + PLAYER_SPEED * 2)
-
-            elif (self.x, self.y + PLAYER_SPEED) not in blocked_coordinates and (self.x, self.y - PLAYER_SPEED) not in blocked_coordinates:
-                if (self.x, self.y + PLAYER_SPEED) not in all_row_and_cloumn:
-                    neighbors.append((self.x, self.y + PLAYER_SPEED))
-                    self.delete_wall(self.x, self.y + PLAYER_SPEED)
-                    if (self.x, self.y + PLAYER_SPEED * 2) not in all_row_and_cloumn:
-                        neighbors.append((self.x, self.y + PLAYER_SPEED * 2))
-                        self.delete_wall(self.x, self.y + PLAYER_SPEED * 2)
-
-                if (self.x, self.y - PLAYER_SPEED) not in all_row_and_cloumn:
-                    neighbors.append((self.x, self.y - PLAYER_SPEED))
-                    self.delete_wall(self.x, self.y - PLAYER_SPEED)
-                    if (self.x, self.y - PLAYER_SPEED * 2) not in all_row_and_cloumn:
-                        neighbors.append((self.x, self.y - PLAYER_SPEED * 2))
-                        self.delete_wall(self.x, self.y - PLAYER_SPEED * 2)
-
-        elif (self.x - PLAYER_SPEED, self.y) not in blocked_coordinates and (self.x + PLAYER_SPEED, self.y) in blocked_coordinates:
+        if ((self.x + PLAYER_SPEED, self.y) not in all_row_and_cloumn or (self.x - PLAYER_SPEED, self.y) not in all_row_and_cloumn) and ((self.x, self.y + PLAYER_SPEED) in all_row_and_cloumn or (self.x, self.y - PLAYER_SPEED) in all_row_and_cloumn):
             neighbors.append((self.x + PLAYER_SPEED, self.y))
-            self.delete_wall(self.x + PLAYER_SPEED, self.y)
-            if (self.x - PLAYER_SPEED, self.y) not in all_row_and_cloumn:
-                neighbors.append((self.x - PLAYER_SPEED, self.y))
-                self.delete_wall(self.x - PLAYER_SPEED, self.y)
-                if (self.x - PLAYER_SPEED * 2, self.y) not in all_row_and_cloumn:
-                    neighbors.append((self.x - PLAYER_SPEED * 2, self.y))
-                    self.delete_wall(self.x - PLAYER_SPEED * 2, self.y)
+            neighbors.append((self.x - PLAYER_SPEED, self.y))
 
-            if (self.x, self.y + PLAYER_SPEED) in blocked_coordinates and (self.x, self.y - PLAYER_SPEED) in blocked_coordinates:
-                neighbors.append((self.x, self.y + PLAYER_SPEED))
-                neighbors.append((self.x, self.y - PLAYER_SPEED))
-                self.delete_wall(self.x, self.y + PLAYER_SPEED)
-                self.delete_wall(self.x, self.y - PLAYER_SPEED)
-
-            elif (self.x, self.y + PLAYER_SPEED) in blocked_coordinates and (self.x, self.y - PLAYER_SPEED) not in blocked_coordinates:
-                neighbors.append((self.x, self.y + PLAYER_SPEED))
-                self.delete_wall(self.x, self.y + PLAYER_SPEED)
-                if (self.x, self.y - PLAYER_SPEED) not in all_row_and_cloumn:
-                    neighbors.append((self.x, self.y - PLAYER_SPEED))
-                    self.delete_wall(self.x, self.y - PLAYER_SPEED)
-                    if (self.x, self.y - PLAYER_SPEED * 2) not in all_row_and_cloumn:
-                        neighbors.append((self.x, self.y - PLAYER_SPEED * 2))
-                        self.delete_wall(self.x, self.y - PLAYER_SPEED * 2)
-
-            elif (self.x, self.y + PLAYER_SPEED) not in blocked_coordinates and (self.x, self.y - PLAYER_SPEED) in blocked_coordinates:
-                neighbors.append((self.x, self.y - PLAYER_SPEED))
-                self.delete_wall(self.x, self.y + PLAYER_SPEED)
-                if (self.x, self.y + PLAYER_SPEED) not in all_row_and_cloumn:
-                    neighbors.append((self.x, self.y + PLAYER_SPEED))
-                    self.delete_wall(self.x, self.y + PLAYER_SPEED)
-                    if (self.x, self.y + PLAYER_SPEED * 2) not in all_row_and_cloumn:
-                        neighbors.append((self.x, self.y + PLAYER_SPEED * 2))
-                        self.delete_wall(self.x, self.y + PLAYER_SPEED * 2)
-
-            elif (self.x, self.y + PLAYER_SPEED) not in blocked_coordinates and (self.x, self.y - PLAYER_SPEED) not in blocked_coordinates:
-                if (self.x, self.y + PLAYER_SPEED) not in all_row_and_cloumn:
-                    neighbors.append((self.x, self.y + PLAYER_SPEED))
-                    self.delete_wall(self.x, self.y + PLAYER_SPEED)
-                    if (self.x, self.y + PLAYER_SPEED * 2) not in all_row_and_cloumn:
-                        neighbors.append((self.x, self.y + PLAYER_SPEED * 2))
-                        self.delete_wall(self.x, self.y + PLAYER_SPEED * 2)
-                if (self.x, self.y - PLAYER_SPEED) not in all_row_and_cloumn:
-                    neighbors.append((self.x, self.y - PLAYER_SPEED))
-                    self.delete_wall(self.x, self.y - PLAYER_SPEED)
-                    if (self.x, self.y - PLAYER_SPEED * 2) not in all_row_and_cloumn:
-                        neighbors.append((self.x, self.y - PLAYER_SPEED * 2))
-                        self.delete_wall(self.x, self.y - PLAYER_SPEED * 2)
-        
-        elif (self.x + PLAYER_SPEED, self.y) not in blocked_coordinates and (self.x - PLAYER_SPEED, self.y) not in blocked_coordinates:
-            if (self.x - PLAYER_SPEED, self.y) not in all_row_and_cloumn:
-                neighbors.append((self.x - PLAYER_SPEED, self.y))
-                self.delete_wall(self.x - PLAYER_SPEED, self.y)
-                if (self.x - PLAYER_SPEED * 2, self.y) not in all_row_and_cloumn:
-                    neighbors.append((self.x - PLAYER_SPEED * 2, self.y))
-                    self.delete_wall(self.x - PLAYER_SPEED * 2, self.y)
-
-            if (self.x + PLAYER_SPEED, self.y) not in all_row_and_cloumn:
-                neighbors.append((self.x + PLAYER_SPEED, self.y))
-                self.delete_wall(self.x + PLAYER_SPEED, self.y)
-                if (self.x + PLAYER_SPEED * 2, self.y) not in all_row_and_cloumn:
-                    neighbors.append((self.x + PLAYER_SPEED * 2, self.y))
-                    self.delete_wall(self.x + PLAYER_SPEED * 2, self.y)
-
-            if (self.x, self.y + PLAYER_SPEED) in blocked_coordinates and (self.x, self.y - PLAYER_SPEED) in blocked_coordinates:
-                neighbors.append((self.x, self.y + PLAYER_SPEED))
-                neighbors.append((self.x, self.y - PLAYER_SPEED))
-                self.delete_wall(self.x, self.y + PLAYER_SPEED)
-                self.delete_wall(self.x, self.y - PLAYER_SPEED)
-
-            elif (self.x, self.y + PLAYER_SPEED) in blocked_coordinates and (self.x, self.y - PLAYER_SPEED) not in blocked_coordinates:
-                neighbors.append((self.x, self.y + PLAYER_SPEED))
-                self.delete_wall(self.x, self.y + PLAYER_SPEED)
-                if (self.x, self.y - PLAYER_SPEED) not in all_row_and_cloumn:
-                    neighbors.append((self.x, self.y - PLAYER_SPEED))
-                    self.delete_wall(self.x, self.y - PLAYER_SPEED)
-                    if (self.x, self.y - PLAYER_SPEED * 2) not in all_row_and_cloumn:
-                        neighbors.append((self.x, self.y - PLAYER_SPEED * 2))
-                        self.delete_wall(self.x, self.y - PLAYER_SPEED * 2)
-
-            elif (self.x, self.y + PLAYER_SPEED) not in blocked_coordinates and (self.x, self.y - PLAYER_SPEED) in blocked_coordinates:
-                neighbors.append((self.x, self.y - PLAYER_SPEED))
-                self.delete_wall(self.x, self.y + PLAYER_SPEED)
-                if (self.x, self.y + PLAYER_SPEED) not in all_row_and_cloumn:
-                    neighbors.append((self.x, self.y + PLAYER_SPEED))
-                    self.delete_wall(self.x, self.y + PLAYER_SPEED)
-                    if (self.x, self.y + PLAYER_SPEED * 2) not in all_row_and_cloumn:
-                        neighbors.append((self.x, self.y + PLAYER_SPEED * 2))
-                        self.delete_wall(self.x, self.y + PLAYER_SPEED * 2)
-
-            elif (self.x, self.y + PLAYER_SPEED) not in blocked_coordinates and (self.x, self.y - PLAYER_SPEED) not in blocked_coordinates:
-                if (self.x, self.y + PLAYER_SPEED) not in all_row_and_cloumn:
-                    neighbors.append((self.x, self.y + PLAYER_SPEED))
-                    self.delete_wall(self.x, self.y + PLAYER_SPEED)
-                    if (self.x, self.y + PLAYER_SPEED * 2) not in all_row_and_cloumn:
-                        neighbors.append((self.x, self.y + PLAYER_SPEED * 2))
-                        self.delete_wall(self.x, self.y + PLAYER_SPEED * 2)
-                if (self.x, self.y - PLAYER_SPEED) not in all_row_and_cloumn:
-                    neighbors.append((self.x, self.y - PLAYER_SPEED))
-                    self.delete_wall(self.x, self.y - PLAYER_SPEED)
-                    if (self.x, self.y - PLAYER_SPEED * 2) not in all_row_and_cloumn:
-                        neighbors.append((self.x, self.y - PLAYER_SPEED * 2))
-                        self.delete_wall(self.x, self.y - PLAYER_SPEED * 2)
+            if (self.x + PLAYER_SPEED, self.y) not in blocked_coordinates:
+                neighbors.append((self.x + PLAYER_SPEED * 2, self.y))
+            if (self.x - PLAYER_SPEED, self.y) not in blocked_coordinates:
+                neighbors.append((self.x - PLAYER_SPEED * 2, self.y))
 
         for neighbor in neighbors:
             x, y = neighbor
-            if LEFT <= x <= RIGHT and UP <= y <= DOWN and (self.x - 17) / PLAYER_SPEED % 2 == 0:
+            
+            if self.x == x and LEFT <= x <= RIGHT and UP <= y <= DOWN and (self.y - 35) / PLAYER_SPEED % 2 == 1:
                 self.neighbor_explosions.append((x, y))
-            elif self.y == y and LEFT <= x <= RIGHT and UP <= y <= DOWN:
+
+            if self.y == y and LEFT <= x <= RIGHT and UP <= y <= DOWN and (self.x - 17) / PLAYER_SPEED % 2 == 1:
+                self.neighbor_explosions.append((x, y))
+
+            if LEFT <= x <= RIGHT and UP <= y <= DOWN and (self.x - 17) / PLAYER_SPEED % 2 == 0 and (self.y - 35) / PLAYER_SPEED % 2 == 0:
+                self.neighbor_explosions.append((x, y))
+
+            if LEFT <= x <= RIGHT and UP <= y <= DOWN and (self.y - 35) / PLAYER_SPEED % 2 == 0 and (self.x - 17) / PLAYER_SPEED % 2 == 0:
                 self.neighbor_explosions.append((x, y))
 
 
