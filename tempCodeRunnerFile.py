@@ -129,8 +129,10 @@ for wall_pos in wall_list:
     wall = Wall(wall_pos[0], wall_pos[1], wall_image)
     wall_objects.append(wall)
 
-print(wall_objects)
-# print("---------------------")
+for wall_1 in wall_objects:
+    wall = (wall_1[0], wall_1[1])
+    print(wall)
+print("---------------------")
 
 for wall in wall_delete:
     wall_objects.remove(wall[0], wall[1], wall_image)
