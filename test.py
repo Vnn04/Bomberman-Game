@@ -84,8 +84,7 @@ for col in range(17,834, 51):
         if col % 2 == 0 and row % 2 == 0:
             all_row_and_cloumn.append((col, row))
 
-
-wall_will_remove = []
+wall_delete = []
 
 # Define Player class
 class Player:
@@ -124,18 +123,14 @@ class Bomb:
         self.neighbor_explosions = []
         
     def delete_wall(self ,test_x, test_y):
-        x0 = 0
-        y0 = 0
         if (test_x, test_y) in blocked_coordinates:
-            # for wall in wall_list:
-            #     if test_x >= wall[0] and test_x <= wall[0] + 51 and test_y >= wall[1] and test_y <= wall[1] + 51:
-            #         x0 = wall[0]
-            #         y0 = wall[1]
-            # wall_list.remove((x0, y0))
             blocked_coordinates.remove((test_x, test_y))
-            # wall_will_remove.append((x0, y0, wall_image))
-            pygame.display.update()
+            for wall in wall_list:
+                if wall[0] - 10 < test_x < wall[0] + PLAYER_SPEED and wall[1] - 10 < test_y < wall[1]  + PLAYER_SPEED:
+                    print(wall)
+                    wall_delete.append(wall)
 
+    print(wall_delete)
 
     def calculate_neighbor_explosions(self):
         neighbors = []
@@ -210,8 +205,6 @@ class Bomb:
             if LEFT <= x <= RIGHT and UP <= y <= DOWN and (self.y - 35) / PLAYER_SPEED % 2 == 0 and (self.x - 17) / PLAYER_SPEED % 2 == 0:
                 self.neighbor_explosions.append((x, y))
                 
-            print(self.neighbor_explosions)
-
     def draw(self, screen):
         if not self.exploded:
             screen.blit(self.image, (self.x, self.y))
@@ -256,9 +249,6 @@ wall_objects = []
 for wall_pos in wall_list:
     wall = Wall(wall_pos[0], wall_pos[1], wall_image)
     wall_objects.append(wall)
-
-for wall in wall_will_remove:
-    wall_objects.remove(wall)
 
 # Initialize screen
 pygame.display.set_caption("Bomberman")

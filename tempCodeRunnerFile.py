@@ -129,15 +129,11 @@ for wall_pos in wall_list:
     wall = Wall(wall_pos[0], wall_pos[1], wall_image)
     wall_objects.append(wall)
 
-for wall_1 in wall_objects:
-    wall = (wall_1[0], wall_1[1])
-    print(wall)
-print("---------------------")
+walls_to_remove = []
+for wall in wall_objects:
+    if (wall.x, wall.y) in wall_delete:
+        walls_to_remove.append(wall)
 
-for wall in wall_delete:
-    wall_objects.remove(wall[0], wall[1], wall_image)
-
-# print(wall_objects)
 
 # define bomb class
 class Bomb:
@@ -292,7 +288,11 @@ while running:
 
     # Draw wall objects
     for wall in wall_objects:
-        wall.draw(screen)
+        if (wall.x, wall.y) not in wall_delete:
+            wall.draw(screen)
+
+    for wall in walls_to_remove:
+        wall_objects.remove(wall)
 
     if bomb:
         bomb.draw(screen)
