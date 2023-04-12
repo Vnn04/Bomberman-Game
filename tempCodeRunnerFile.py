@@ -11,6 +11,12 @@ HEIGHT = 600
 PLAYER_SPEED = 51
 player_start_x = 17
 player_start_y = 35
+bot1_x = 425
+bot1_y = 137
+bot2_x = 119
+bot2_y = 443
+bot3_x = 527
+bot3_y = 443
 
 # game space
 LEFT = 17
@@ -36,47 +42,52 @@ wall_image = pygame.image.load(r"C:\Users\nguye\Documents\Bomberman\picture\wall
 wall_image = pygame.transform.scale(wall_image, (50, 50))
 explosion_image = pygame.image.load(r"C:\Users\nguye\Documents\Bomberman\picture\explosion.png")
 explosion_image = pygame.transform.scale(explosion_image, (51, 51))
+bot1_image = pygame.image.load(r"C:\Users\nguye\Documents\Bomberman\picture\bot1.png")
+bot1_image = pygame.transform.scale(bot1_image, (50, 50))
+bot2_image = pygame.image.load(r"C:\Users\nguye\Documents\Bomberman\picture\bot2.png")
+bot2_image = pygame.transform.scale(bot2_image, (50, 50))
+bot3_image = pygame.image.load(r"C:\Users\nguye\Documents\Bomberman\picture\bot3.png")
+bot3_image = pygame.transform.scale(bot3_image, (50, 50))
 
 # Initialize font
 font_small = pygame.font.SysFont('sans', 10)
 
-#wall list
-wall_list = [(17, 188), (17, 392),
+wall_list =  [(17, 188), (17, 392), 
             (68, 239), (68, 443), 
-            (118, 86), (118, 188), (118, 290), (118, 392), (118, 493), 
-            (168, 35), (168, 137), (168, 341), (168, 543), 
-            (219, 86), (219, 290), (219, 493), 
-            (269, 137), (269, 239), (269, 341), 
-            (321, 188), (321, 290), (321, 392), (321, 493), 
-            (371, 137), (371, 341), (371, 443), (371, 543), 
-            (423, 86), (423, 188), (423, 392), 
-            (474, 35), (474, 239), (474, 341), 
-            (524, 188), (524, 493), 
-            (576, 35), (576, 341), (576, 443), (576, 543), 
-            (628, 86), (628, 188), (628, 290), (628, 392), 
+            (119, 86), (119, 188), (119, 290), (119, 392), (119, 494), 
+            (170, 35), (170, 137), (170, 341), (170, 545), 
+            (221, 86), (221, 290), (221, 494), 
+            (272, 137), (272, 239), (272, 341), 
+            (323, 188), (323, 290), (323, 392), (323, 494), 
+            (374, 137), (374, 341), (374, 443), (374, 545), 
+            (425, 86), (425, 188), (425, 392), 
+            (476, 35), (476, 239), (476, 341), 
+            (527, 188), (527, 494), 
+            (578, 35), (578, 341), (578, 443), (578, 545), 
+            (629, 86), (629, 188), (629, 290), (629, 392), 
             (680, 137), (680, 239), (680, 443), 
-            (732, 86), (732, 188), (732, 392), (732, 493), 
-            (783, 35), (783, 137), (783, 239), (783, 341), (783, 543), 
-            (834, 188), (834, 392)]
+            (731, 86), (731, 188), (731, 392), (731, 494), 
+            (782, 35), (782, 137), (782, 239), (782, 341), (782, 545), 
+            (833, 188), (833, 392)]
 
 # list of cells that cannot be entered
 blocked_coordinates = [(17, 188), (17, 392), 
-                       (68, 239), (68, 443), 
-                       (119, 86), (119, 188), (119, 290), (119, 392), (119, 494), 
-                       (170, 35), (170, 137), (170, 341), (170, 545), 
-                       (221, 86), (221, 290), (221, 494), 
-                       (272, 137), (272, 239), (272, 341), 
-                       (323, 188), (323, 290), (323, 392), (323, 494), 
-                       (374, 137), (374, 341), (374, 443), (374, 545), 
-                       (425, 86), (425, 188), (425, 392), 
-                       (476, 35), (476, 239), (476, 341), 
-                       (527, 188), (527, 494), 
-                       (578, 35), (578, 341), (578, 443), (578, 545), 
-                       (629, 86), (629, 188), (629, 290), (629, 392), 
-                       (680, 137), (680, 239), (680, 443), 
-                       (731, 86), (731, 188), (731, 392), (731, 494), 
-                       (782, 35), (782, 137), (782, 239), (782, 341), (782, 545), 
-                       (833, 188), (833, 392)]
+                    (68, 239), (68, 443), 
+                    (119, 86), (119, 188), (119, 290), (119, 392), (119, 494), 
+                    (170, 35), (170, 137), (170, 341), (170, 545), 
+                    (221, 86), (221, 290), (221, 494), 
+                    (272, 137), (272, 239), (272, 341), 
+                    (323, 188), (323, 290), (323, 392), (323, 494), 
+                    (374, 137), (374, 341), (374, 443), (374, 545), 
+                    (425, 86), (425, 188), (425, 392), 
+                    (476, 35), (476, 239), (476, 341), 
+                    (527, 188), (527, 494), 
+                    (578, 35), (578, 341), (578, 443), (578, 545), 
+                    (629, 86), (629, 188), (629, 290), (629, 392), 
+                    (680, 137), (680, 239), (680, 443), 
+                    (731, 86), (731, 188), (731, 392), (731, 494), 
+                    (782, 35), (782, 137), (782, 239), (782, 341), (782, 545), 
+                    (833, 188), (833, 392)]
 
 all_row_and_cloumn = []
 for col in range(17,834, 51):
@@ -84,7 +95,6 @@ for col in range(17,834, 51):
         if col % 2 == 0 and row % 2 == 0:
             all_row_and_cloumn.append((col, row))
 
-wall_delete = []
 
 # Define Player class
 class Player:
@@ -112,30 +122,35 @@ class Player:
     def draw(self, screen):
         screen.blit(self.image, (self.x, self.y))
 
-# define wall class
-class Wall:
+# define bot class
+class Bot:
     def __init__(self, x, y, image):
         self.x = x
         self.y = y
         self.image = image
+        self.movement_speed = 51  # Số pixel bot di chuyển sau mỗi lần cập nhật
+        self.time_to_move = 500  # Thời gian giữa các lần di chuyển (2 giây)
+        self.last_move_time = pygame.time.get_ticks()  # Lưu thời điểm di chuyển gần nhất
 
     def draw(self, screen):
         screen.blit(self.image, (self.x, self.y))
 
-# Initialize wall objects
-wall_objects = []
-
-for wall_pos in wall_list:
-    wall = Wall(wall_pos[0], wall_pos[1], wall_image)
-    wall_objects.append(wall)
-
-walls_to_remove = []
-for wall in wall_objects:
-    if (wall.x, wall.y) in wall_delete:
-        walls_to_remove.append(wall)
+    def move(self):
+        current_time = pygame.time.get_ticks()
+        if current_time - self.last_move_time >= self.time_to_move:
+            if ((self.x + self.movement_speed, self.y) not in blocked_coordinates and (self.x + self.movement_speed, self.y) not in all_row_and_cloumn):
+                self.x += self.movement_speed
+            elif ((self.x - self.movement_speed, self.y) not in blocked_coordinates and (self.x - self.movement_speed, self.y) not in all_row_and_cloumn):
+                self.x -= self.movement_speed
+            elif ((self.x, self.y + self.movement_speed) not in blocked_coordinates and (self.x, self.y + self.movement_speed) not in all_row_and_cloumn):
+                self.y += self.movement_speed
+            elif ((self.x, self.y - self.movement_speed) not in blocked_coordinates and (self.x, self.y - self.movement_speed) not in all_row_and_cloumn):
+                self.y -= self.movement_speed
+            self.last_move_time = current_time
 
 
 # define bomb class
+wall_will_remove = []
 class Bomb:
     def __init__(self, x, y, image):
         self.x = x
@@ -146,15 +161,11 @@ class Bomb:
         self.neighbor_explosions = []
         
     def delete_wall(self ,test_x, test_y):
-        wall_delete = []
         if (test_x, test_y) in blocked_coordinates:
             blocked_coordinates.remove((test_x, test_y))
-            for wall in wall_list:
-                if wall[0] - 10 <= test_x <= wall[0] + PLAYER_SPEED and wall[1] - 10 <= test_y <= wall[1] + PLAYER_SPEED:
-                    wall_delete.append((wall[0], wall[1]))
+            wall_will_remove.append((test_x,test_y))
+            pygame.display.update()
 
-            for wall in wall_delete:
-                wall_list.remove(wall)
 
     def calculate_neighbor_explosions(self):
         neighbors = []
@@ -247,16 +258,41 @@ class Bomb:
 
         if self.image:
             screen.blit(self.image, (self.x, self.y))
+        
+# define wall class
+class Wall:
+    def __init__(self, x, y, image):
+        self.x = x
+        self.y = y
+        self.image = image
 
+    def draw(self, screen):
+        screen.blit(self.image, (self.x, self.y))
 
 # Initialize player object
 player = Player(player_start_x, player_start_y, player_image)
+
+bot1 = Bot(bot1_x, bot1_y, bot1_image)
+
+bot2 = Bot(bot2_x, bot2_y, bot2_image)
+
+bot3 = Bot(bot3_x, bot3_y, bot3_image)
 
 # Initialize bomb object
 bomb = None
 
 # Initialize the explosion object
 explosion = None
+
+# Initialize wall objects
+wall_objects = []
+for wall_pos in wall_list:
+    wall = Wall(wall_pos[0], wall_pos[1], wall_image)
+    wall_objects.append(wall)
+
+
+for wall in wall_will_remove:
+    wall_objects.remove(wall)
 
 # Initialize screen
 pygame.display.set_caption("Bomberman")
@@ -287,19 +323,23 @@ while running:
     screen.blit(background_image, (0, 0))
 
     # Draw wall objects
-    for wall in wall_objects:
-        if (wall.x, wall.y) not in wall_delete:
+    for wall in wall_objects :
+        if (wall.x, wall.y) not in wall_will_remove:
             wall.draw(screen)
 
-    for wall in walls_to_remove:
-        wall_objects.remove(wall)
-
+    bot1.move()
+    bot2.move()
+    bot3.move()
+    
     if bomb:
         bomb.draw(screen)
         if pygame.time.get_ticks() > bomb.explode_time:  # explode bomb after 2 seconds
             bomb = None
 
     player.draw(screen)
+    bot1.draw(screen)
+    bot2.draw(screen)
+    bot3.draw(screen)
 
     # print the cursor coordinates to the screen
     mouse_x, mouse_y = pygame.mouse.get_pos()
@@ -308,7 +348,6 @@ while running:
 
     # Update screen
     pygame.display.flip()
-    pygame.display.update()
 
 # Quit game
 pygame.quit()
