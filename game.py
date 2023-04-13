@@ -298,12 +298,12 @@ quit_button = Button(350, 325, 200, 50, "Quit Game")
 player = Player(player_start_x, player_start_y, player_image)
 
 bot1 = Bot(bot1_x, bot1_y, bot1_image)
-
 bot2 = Bot(bot2_x, bot2_y, bot2_image)
-
 bot3 = Bot(bot3_x, bot3_y, bot3_image)
 
-mouse_x, mouse_y = pygame.mouse.get_pos()
+bot1_pos = (bot1.x, bot1.y)
+bot2_pos = (bot2.x, bot2.y)
+bot3_pos = (bot3.x, bot3.y)
 
 # Initialize bomb object
 bomb = None
@@ -376,6 +376,11 @@ while running:
     if bomb:
         bomb.draw(screen)
         if pygame.time.get_ticks() > bomb.explode_time:  # explode bomb after 2 seconds
+            for (bot, bot_pos) in [(bot1, bot1_pos), (bot2, bot2_pos), (bot3, bot3_pos)]:
+                if bomb and abs(bot_pos[0] - bomb.x) <= 102 and abs(bot_pos[1] - bomb.y) <= 102:
+                    bot.x = -10000  # set the bot's coordinates outside the screen
+                    bot.y = -10000
+                    bot.update()
             bomb = None
 
     bot1.update()
@@ -388,6 +393,7 @@ while running:
     bot3.draw(screen)
 
     # print the cursor coordinates to the screen
+    mouse_x, mouse_y = pygame.mouse.get_pos()
     text_mouse = font_small.render("(" + str(mouse_x) + "," + str(mouse_y) + ")", True, BLACK)
     screen.blit(text_mouse, (mouse_x + 10, mouse_y))
 
