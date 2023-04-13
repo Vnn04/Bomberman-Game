@@ -293,6 +293,8 @@ class Button:
 
 start_button = Button(350, 250, 200, 50, "Start Game")
 quit_button = Button(350, 325, 200, 50, "Quit Game")
+win_button = Button(350, 300, 200, 50, "WIN")
+lose_button = Button(350, 300, 200, 50, "LOSE")
 
 # Initialize player object
 player = Player(player_start_x, player_start_y, player_image)
@@ -381,7 +383,49 @@ while running:
                     bot.x = -10000  # set the bot's coordinates outside the screen
                     bot.y = -10000
                     bot.update()
+                if bomb and (abs(player.x - bomb.x) <= 102 and player.y == bomb.y) or (abs(player.y - bomb.y) <= 102 and player.x == bomb.x):
+                    player.x = -10000
+                    player.y = -10000
             bomb = None
+
+    win = False
+    lose = False
+
+    if player.x < 0 and player.y < 0:
+        lose = True
+
+    if (bot1.x < 0) and (bot2.x < 0) and (bot3.x < 0):
+        win = True
+    
+    while lose:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                lose = False
+                running = False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if lose_button.rect.collidepoint(event.pos):
+                    lose = False
+                    running = False
+        
+        screen.blit(menu_background, (0, 0))
+        lose_button.draw(screen)
+
+        pygame.display.flip()
+
+    while win:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                win = False
+                running = False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if win_button.rect.collidepoint(event.pos):
+                    win = False
+                    running = False
+        
+        screen.blit(menu_background, (0, 0))
+        win_button.draw(screen)
+
+        pygame.display.flip()
 
     bot1.update()
     bot2.update()
