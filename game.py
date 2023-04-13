@@ -377,7 +377,7 @@ while running:
         bomb.draw(screen)
         if pygame.time.get_ticks() > bomb.explode_time:  # explode bomb after 2 seconds
             for (bot, bot_pos) in [(bot1, bot1_pos), (bot2, bot2_pos), (bot3, bot3_pos)]:
-                if bomb and abs(bot_pos[0] - bomb.x) <= 102 and abs(bot_pos[1] - bomb.y) <= 102:
+                if bomb and (abs(bot_pos[0] - bomb.x) <= 102 and bot_pos[1] == bomb.y) or (abs(bot_pos[1] - bomb.y) <= 102 and bot_pos[0] == bomb.x):
                     bot.x = -10000  # set the bot's coordinates outside the screen
                     bot.y = -10000
                     bot.update()
