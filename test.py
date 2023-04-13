@@ -35,6 +35,9 @@ BLUE = (0,0,255)
 # Load images
 background_image = pygame.image.load(r"C:\Users\nguye\Documents\Bomberman\picture\background.png")
 background_image = pygame.transform.scale(background_image, (WIDTH, HEIGHT))
+soundtrack = pygame.mixer.music.load(r"C:\Users\nguye\Documents\Bomberman\sound\soundtrack.mp3")
+pygame.mixer.music.play(-1)
+bomb_sound = pygame.mixer.Sound(r"C:\Users\nguye\Documents\Bomberman\sound\bomb.mp3")
 player_image = pygame.image.load(r"C:\Users\nguye\Documents\Bomberman\picture\player.png")
 player_image = pygame.transform.scale(player_image, (45, 50))
 bomb_image = pygame.image.load(r"C:\Users\nguye\Documents\Bomberman\picture\bomb.png")
@@ -160,7 +163,7 @@ class Bomb:
         self.x = x
         self.y = y
         self.image = image
-        self.explode_time = pygame.time.get_ticks() + 2000  # set 2 seconds timer
+        self.explode_time = pygame.time.get_ticks() + 1700  # set 1,7 seconds timer
         self.exploded = False
         self.neighbor_explosions = []
         
@@ -322,6 +325,7 @@ while running:
                 player.move_right()
             elif event.key == pygame.K_SPACE and not bomb:  # create bomb when space key is pressed
                 bomb = Bomb(player.x, player.y, bomb_image)
+                bomb_sound.play()
                 
     # Draw images and text
     screen.blit(background_image, (0, 0))
