@@ -1,3 +1,4 @@
+import random
 import time
 import pygame
 from pygame.locals import *
@@ -128,10 +129,29 @@ class Bot:
         self.x = x
         self.y = y
         self.image = image
-        self.bot_delay = pygame.time.get_ticks() + 500 # set 500ms timer
+        self.movement_speed = 51
+        self.time_to_move = 300
+        self.last_move_time = pygame.time.get_ticks()
 
     def draw(self, screen):
         screen.blit(self.image, (self.x, self.y))
+
+    def update(self):
+        # Kiểm tra xem đã đến lúc di chuyển chưa
+        current_time = pygame.time.get_ticks()
+        if current_time - self.last_move_time >= self.time_to_move:
+            # Đã đến lúc di chuyển, tạo một số ngẫu nhiên để quyết định di chuyển sang trái hay phải
+            direction = random.choice(['left', 'right', 'up', 'down'])
+            if direction == 'left'and self.x - self.movement_speed >= LEFT and (self.x - self.movement_speed, self.y) not in blocked_coordinates and (self.x - self.movement_speed, self.y) not in all_row_and_cloumn:
+                self.x -= self.movement_speed
+            elif direction == 'right' and self.x + self.movement_speed <= RIGHT and (self.x + self.movement_speed, self.y) not in blocked_coordinates and (self.x + self.movement_speed, self.y) not in all_row_and_cloumn:
+                self.x += self.movement_speed
+            elif direction == 'up' and self.y - self.movement_speed >= UP and (self.x, self.y - self.movement_speed) not in blocked_coordinates and (self.x, self.y - self.movement_speed) not in all_row_and_cloumn:
+                self.y -= self.movement_speed
+            elif direction == 'down' and self.y + self.movement_speed <= DOWN and (self.x, self.y + self.movement_speed) not in blocked_coordinates and (self.x, self.y + self.movement_speed) not in all_row_and_cloumn:
+                self.y += self.movement_speed
+            # Cập nhật thời gian di chuyển của bot
+            self.last_move_time = current_time
 
 # define bomb class
 wall_will_remove = []
@@ -310,18 +330,20 @@ while running:
     for wall in wall_objects :
         if (wall.x, wall.y) not in wall_will_remove:
             wall.draw(screen)
+
     
     if bomb:
         bomb.draw(screen)
         if pygame.time.get_ticks() > bomb.explode_time:  # explode bomb after 2 seconds
             bomb = None
 
+    bot1.update()
+    bot2.update()
+    bot3.update()
+
     player.draw(screen)
-
     bot1.draw(screen)
-
     bot2.draw(screen)
-
     bot3.draw(screen)
 
     # print the cursor coordinates to the screen
