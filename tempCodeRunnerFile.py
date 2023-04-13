@@ -130,17 +130,20 @@ class Bot:
         self.y = y
         self.image = image
         self.movement_speed = 51
-        self.time_to_move = 300
+        self.time_to_move = 200
         self.last_move_time = pygame.time.get_ticks()
+    
+    def delete_bot(self):
+        if (self.x, self.y) in neighbor_explosions:
+            return False
+        return True
 
     def draw(self, screen):
         screen.blit(self.image, (self.x, self.y))
 
     def update(self):
-        # Kiểm tra xem đã đến lúc di chuyển chưa
         current_time = pygame.time.get_ticks()
         if current_time - self.last_move_time >= self.time_to_move:
-            # Đã đến lúc di chuyển, tạo một số ngẫu nhiên để quyết định di chuyển sang trái hay phải
             direction = random.choice(['left', 'right', 'up', 'down'])
             if direction == 'left'and self.x - self.movement_speed >= LEFT and (self.x - self.movement_speed, self.y) not in blocked_coordinates and (self.x - self.movement_speed, self.y) not in all_row_and_cloumn:
                 self.x -= self.movement_speed
@@ -150,7 +153,6 @@ class Bot:
                 self.y -= self.movement_speed
             elif direction == 'down' and self.y + self.movement_speed <= DOWN and (self.x, self.y + self.movement_speed) not in blocked_coordinates and (self.x, self.y + self.movement_speed) not in all_row_and_cloumn:
                 self.y += self.movement_speed
-            # Cập nhật thời gian di chuyển của bot
             self.last_move_time = current_time
 
 # define bomb class
@@ -276,17 +278,12 @@ class Wall:
 # Initialize player object
 player = Player(player_start_x, player_start_y, player_image)
 
-bot1 = Bot(bot1_x, bot1_y, bot1_image)
-
-bot2 = Bot(bot2_x, bot2_y, bot2_image)
-
-bot3 = Bot(bot3_x, bot3_y, bot3_image)
-
 # Initialize bomb object
 bomb = None
 
-# Initialize the explosion object
-explosion = None
+bot1 = Bot(bot1_x, bot1_y, bot1_image)
+bot2 = Bot(bot2_x, bot2_y, bot2_image)
+bot3 = Bot(bot3_x, bot3_y, bot3_image)
 
 # Initialize wall objects
 wall_objects = []
@@ -334,17 +331,23 @@ while running:
     
     if bomb:
         bomb.draw(screen)
-        if pygame.time.get_ticks() > bomb.explode_time:  # explode bomb after 2 seconds
+        if pygame.time.get_ticks() > bomb.explode_time:  # explode bomb_check after 2 seconds
             bomb = None
 
     bot1.update()
     bot2.update()
     bot3.update()
 
+    if (bot1.delete_bot()):
+       bot1.draw(screen)
+    
+    if (bot2.delete_bot()):
+       bot2.draw(screen)
+
+    if (bot3.delete_bot()):
+        bot3.draw(screen)
+
     player.draw(screen)
-    bot1.draw(screen)
-    bot2.draw(screen)
-    bot3.draw(screen)
 
     # print the cursor coordinates to the screen
     mouse_x, mouse_y = pygame.mouse.get_pos()
