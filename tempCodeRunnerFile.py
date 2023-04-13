@@ -33,8 +33,13 @@ RED = (255,0,0)
 BLUE = (0,0,255)
 
 # Load images
+menu_background = pygame.image.load(r"C:\Users\nguye\Documents\Bomberman\picture\menu_background.jpg")
+menu_background = pygame.transform.scale(menu_background, (WIDTH, HEIGHT))
 background_image = pygame.image.load(r"C:\Users\nguye\Documents\Bomberman\picture\background.png")
 background_image = pygame.transform.scale(background_image, (WIDTH, HEIGHT))
+soundtrack = pygame.mixer.music.load(r"C:\Users\nguye\Documents\Bomberman\sound\soundtrack.mp3")
+pygame.mixer.music.play(-1)
+bomb_sound = pygame.mixer.Sound(r"C:\Users\nguye\Documents\Bomberman\sound\bomb.mp3")
 player_image = pygame.image.load(r"C:\Users\nguye\Documents\Bomberman\picture\player.png")
 player_image = pygame.transform.scale(player_image, (45, 50))
 bomb_image = pygame.image.load(r"C:\Users\nguye\Documents\Bomberman\picture\bomb.png")
@@ -130,20 +135,17 @@ class Bot:
         self.y = y
         self.image = image
         self.movement_speed = 51
-        self.time_to_move = 200
+        self.time_to_move = 300
         self.last_move_time = pygame.time.get_ticks()
-    
-    def delete_bot(self):
-        if (self.x, self.y) in neighbor_explosions:
-            return False
-        return True
 
     def draw(self, screen):
         screen.blit(self.image, (self.x, self.y))
 
     def update(self):
+        # Kiểm tra xem đã đến lúc di chuyển chưa
         current_time = pygame.time.get_ticks()
         if current_time - self.last_move_time >= self.time_to_move:
+            # Đã đến lúc di chuyển, tạo một số ngẫu nhiên để quyết định di chuyển sang trái hay phải
             direction = random.choice(['left', 'right', 'up', 'down'])
             if direction == 'left'and self.x - self.movement_speed >= LEFT and (self.x - self.movement_speed, self.y) not in blocked_coordinates and (self.x - self.movement_speed, self.y) not in all_row_and_cloumn:
                 self.x -= self.movement_speed
@@ -153,6 +155,7 @@ class Bot:
                 self.y -= self.movement_speed
             elif direction == 'down' and self.y + self.movement_speed <= DOWN and (self.x, self.y + self.movement_speed) not in blocked_coordinates and (self.x, self.y + self.movement_speed) not in all_row_and_cloumn:
                 self.y += self.movement_speed
+            # Cập nhật thời gian di chuyển của bot
             self.last_move_time = current_time
 
 # define bomb class
@@ -162,7 +165,7 @@ class Bomb:
         self.x = x
         self.y = y
         self.image = image
-        self.explode_time = pygame.time.get_ticks() + 2000  # set 2 seconds timer
+        self.explode_time = pygame.time.get_ticks() + 1700  # set 1,7 seconds timer
         self.exploded = False
         self.neighbor_explosions = []
         
@@ -275,15 +278,38 @@ class Wall:
     def draw(self, screen):
         screen.blit(self.image, (self.x, self.y))
 
+# define Button class
+class Button:
+    def __init__(self, x, y, width, height, text):
+        self.rect = pygame.Rect(x, y, width, height)
+        self.text = text
+
+    def draw(self, screen):
+        pygame.draw.rect(screen, (255, 255, 255), self.rect)
+        font = pygame.font.SysFont('sans', 20)
+        text = font.render(self.text, True, (0, 0, 0))
+        text_rect = text.get_rect(center=self.rect.center)
+        screen.blit(text, text_rect)
+
+start_button = Button(350, 250, 200, 50, "Start Game")
+quit_button = Button(350, 325, 200, 50, "Quit Game")
+
 # Initialize player object
 player = Player(player_start_x, player_start_y, player_image)
+
+bot1 = Bot(bot1_x, bot1_y, bot1_image)
+
+bot2 = Bot(bot2_x, bot2_y, bot2_image)
+
+bot3 = Bot(bot3_x, bot3_y, bot3_image)
+
+mouse_x, mouse_y = pygame.mouse.get_pos()
 
 # Initialize bomb object
 bomb = None
 
-bot1 = Bot(bot1_x, bot1_y, bot1_image)
-bot2 = Bot(bot2_x, bot2_y, bot2_image)
-bot3 = Bot(bot3_x, bot3_y, bot3_image)
+# Initialize the explosion object
+explosion = None
 
 # Initialize wall objects
 wall_objects = []
@@ -299,8 +325,25 @@ for wall in wall_will_remove:
 pygame.display.set_caption("Bomberman")
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
-# Main loop
-running = True
+menu = True
+while menu:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            menu = False
+            running = False
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if start_button.rect.collidepoint(event.pos):
+                menu = False
+                running = True
+            elif quit_button.rect.collidepoint(event.pos):
+                menu = False
+                running = False
+    
+    screen.blit(menu_background, (0, 0))
+    start_button.draw(screen)
+    quit_button.draw(screen)
+
+    pygame.display.flip()
 
 while running:
     # Handle events
@@ -319,6 +362,7 @@ while running:
                 player.move_right()
             elif event.key == pygame.K_SPACE and not bomb:  # create bomb when space key is pressed
                 bomb = Bomb(player.x, player.y, bomb_image)
+                bomb_sound.play()
                 
     # Draw images and text
     screen.blit(background_image, (0, 0))
@@ -331,26 +375,19 @@ while running:
     
     if bomb:
         bomb.draw(screen)
-        if pygame.time.get_ticks() > bomb.explode_time:  # explode bomb_check after 2 seconds
+        if pygame.time.get_ticks() > bomb.explode_time:  # explode bomb after 2 seconds
             bomb = None
 
     bot1.update()
     bot2.update()
     bot3.update()
 
-    if (bot1.delete_bot()):
-       bot1.draw(screen)
-    
-    if (bot2.delete_bot()):
-       bot2.draw(screen)
-
-    if (bot3.delete_bot()):
-        bot3.draw(screen)
-
     player.draw(screen)
+    bot1.draw(screen)
+    bot2.draw(screen)
+    bot3.draw(screen)
 
     # print the cursor coordinates to the screen
-    mouse_x, mouse_y = pygame.mouse.get_pos()
     text_mouse = font_small.render("(" + str(mouse_x) + "," + str(mouse_y) + ")", True, BLACK)
     screen.blit(text_mouse, (mouse_x + 10, mouse_y))
 

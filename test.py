@@ -33,6 +33,8 @@ RED = (255,0,0)
 BLUE = (0,0,255)
 
 # Load images
+menu_background = pygame.image.load(r"C:\Users\nguye\Documents\Bomberman\picture\menu_background.jpg")
+menu_background = pygame.transform.scale(menu_background, (WIDTH, HEIGHT))
 background_image = pygame.image.load(r"C:\Users\nguye\Documents\Bomberman\picture\background.png")
 background_image = pygame.transform.scale(background_image, (WIDTH, HEIGHT))
 soundtrack = pygame.mixer.music.load(r"C:\Users\nguye\Documents\Bomberman\sound\soundtrack.mp3")
@@ -276,6 +278,22 @@ class Wall:
     def draw(self, screen):
         screen.blit(self.image, (self.x, self.y))
 
+# define Button class
+class Button:
+    def __init__(self, x, y, width, height, text):
+        self.rect = pygame.Rect(x, y, width, height)
+        self.text = text
+
+    def draw(self, screen):
+        pygame.draw.rect(screen, (255, 255, 255), self.rect)
+        font = pygame.font.SysFont('sans', 20)
+        text = font.render(self.text, True, (0, 0, 0))
+        text_rect = text.get_rect(center=self.rect.center)
+        screen.blit(text, text_rect)
+
+start_button = Button(350, 250, 200, 50, "Start Game")
+quit_button = Button(350, 325, 200, 50, "Quit Game")
+
 # Initialize player object
 player = Player(player_start_x, player_start_y, player_image)
 
@@ -284,6 +302,8 @@ bot1 = Bot(bot1_x, bot1_y, bot1_image)
 bot2 = Bot(bot2_x, bot2_y, bot2_image)
 
 bot3 = Bot(bot3_x, bot3_y, bot3_image)
+
+mouse_x, mouse_y = pygame.mouse.get_pos()
 
 # Initialize bomb object
 bomb = None
@@ -305,8 +325,25 @@ for wall in wall_will_remove:
 pygame.display.set_caption("Bomberman")
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
-# Main loop
-running = True
+menu = True
+while menu:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            menu = False
+            running = False
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if start_button.rect.collidepoint(event.pos):
+                menu = False
+                running = True
+            elif quit_button.rect.collidepoint(event.pos):
+                menu = False
+                running = False
+    
+    screen.blit(menu_background, (0, 0))
+    start_button.draw(screen)
+    quit_button.draw(screen)
+
+    pygame.display.flip()
 
 while running:
     # Handle events
@@ -351,7 +388,6 @@ while running:
     bot3.draw(screen)
 
     # print the cursor coordinates to the screen
-    mouse_x, mouse_y = pygame.mouse.get_pos()
     text_mouse = font_small.render("(" + str(mouse_x) + "," + str(mouse_y) + ")", True, BLACK)
     screen.blit(text_mouse, (mouse_x + 10, mouse_y))
 
