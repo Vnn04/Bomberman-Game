@@ -378,18 +378,37 @@ while running:
     if bomb:
         bomb.draw(screen)
         if pygame.time.get_ticks() > bomb.explode_time:  # explode bomb after 2 seconds
-            for (bot, bot_pos) in [(bot1, bot1_pos), (bot2, bot2_pos), (bot3, bot3_pos)]:
-                if bomb and (abs(bot_pos[0] - bomb.x) <= 102 and bot_pos[1] == bomb.y) or (abs(bot_pos[1] - bomb.y) <= 102 and bot_pos[0] == bomb.x):
-                    bot.x = -10000  # set the bot's coordinates outside the screen
-                    bot.y = -10000
-                    bot.update()
-                if bomb and (abs(player.x - bomb.x) <= 102 and player.y == bomb.y) or (abs(player.y - bomb.y) <= 102 and player.x == bomb.x):
-                    player.x = -10000
-                    player.y = -10000
+
+            pos = bot1.x, bot1.y
+            if pos in bomb.neighbor_explosions or pos == (bomb.x,bomb.y):
+                bot1.x = -10000  # set the bot's coordinates outside the screen
+                bot1.y = -10000
+                bot1.update()
+
+            pos2 = bot2.x, bot2.y
+            if pos2 in bomb.neighbor_explosions or pos2 == (bomb.x,bomb.y):
+                bot2.x = -10000  # set the bot's coordinates outside the screen
+                bot2.y = -10000
+                bot2.update()
+                
+            pos3 = bot3.x, bot3.y
+            if pos3 in bomb.neighbor_explosions or pos3 == (bomb.x,bomb.y):
+                bot3.x = -10000  # set the bot's coordinates outside the screen
+                bot3.y = -10000
+                bot3.update()
+
+            pos_player = player.x, player.y
+            if  pos_player in bomb.neighbor_explosions or pos_player == (bomb.x, bomb.y):
+                player.x = -10000
+                player.y = -10000   
+            
             bomb = None
 
     win = False
     lose = False
+
+    if (player.x, player.y) in [(bot1.x, bot1.y), (bot2.x, bot2.y), (bot3.x, bot3.y)]:
+        lose = True
 
     if player.x < 0 and player.y < 0:
         lose = True
@@ -437,9 +456,9 @@ while running:
     bot3.draw(screen)
 
     # print the cursor coordinates to the screen
-    mouse_x, mouse_y = pygame.mouse.get_pos()
-    text_mouse = font_small.render("(" + str(mouse_x) + "," + str(mouse_y) + ")", True, BLACK)
-    screen.blit(text_mouse, (mouse_x + 10, mouse_y))
+    # mouse_x, mouse_y = pygame.mouse.get_pos()
+    # text_mouse = font_small.render("(" + str(mouse_x) + "," + str(mouse_y) + ")", True, BLACK)
+    # screen.blit(text_mouse, (mouse_x + 10, mouse_y))
 
     # Update screen
     pygame.display.flip()
