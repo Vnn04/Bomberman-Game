@@ -2,7 +2,6 @@ import random
 import time
 import pygame
 from pygame.locals import *
-import os
 
 pygame.init()
 
@@ -28,9 +27,6 @@ DOWN = 545
 # Basic color
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
-GREEN = (0, 255, 0)
-RED = (255,0,0)
-BLUE = (0,0,255)
 
 # Load images
 menu_background = pygame.image.load("menu_background.jpg")
@@ -58,6 +54,7 @@ bot3_image = pygame.transform.scale(bot3_image, (50, 50))
 # Initialize font
 font_small = pygame.font.SysFont('sans', 10)
 
+# list of coordinates of the walls
 wall_list =  [(17, 188), (17, 392), 
             (68, 239), (68, 443), 
             (119, 86), (119, 188), (119, 290), (119, 392), (119, 494), 
@@ -96,6 +93,7 @@ blocked_coordinates = [(17, 188), (17, 392),
                     (833, 188), (833, 392)]
 
 all_row_and_cloumn = []
+# get all coordinates of columns
 for col in range(17,834, 51):
     for row in range(35,545 ,51):
         if col % 2 == 0 and row % 2 == 0:
@@ -109,22 +107,27 @@ class Player:
         self.y = y
         self.image = image
 
+    # move up 1 cell
     def move_up(self):
         if (self.x, self.y - PLAYER_SPEED) not in blocked_coordinates and self.y > UP and (self.x - 17) / PLAYER_SPEED % 2 == 0:
             self.y -= PLAYER_SPEED
 
+    # move down 1 cell
     def move_down(self):
         if (self.x, self.y + PLAYER_SPEED) not in blocked_coordinates and self.y < DOWN and (self.x - 17) / PLAYER_SPEED % 2 == 0:
             self.y += PLAYER_SPEED
 
+    # move left 1 cell
     def move_left(self):
         if (self.x - PLAYER_SPEED, self.y) not in blocked_coordinates and self.x > LEFT and (self.y - 35) / PLAYER_SPEED % 2 == 0:
             self.x -= PLAYER_SPEED
 
+    # move right 1 cell
     def move_right(self):
         if (self.x + PLAYER_SPEED, self.y) not in blocked_coordinates and self.x < RIGHT and (self.y - 35) / PLAYER_SPEED % 2 == 0:
             self.x += PLAYER_SPEED
 
+    # draw palyer on screen
     def draw(self, screen):
         screen.blit(self.image, (self.x, self.y))
 
@@ -138,14 +141,16 @@ class Bot:
         self.time_to_move = 300
         self.last_move_time = pygame.time.get_ticks()
 
+    # draw bot on screen
     def draw(self, screen):
         screen.blit(self.image, (self.x, self.y))
 
+    # Initialize random direction for bot
     def update(self):
-        # Kiểm tra xem đã đến lúc di chuyển chưa
+        # Check if it's time to move
         current_time = pygame.time.get_ticks()
         if current_time - self.last_move_time >= self.time_to_move:
-            # Đã đến lúc di chuyển, tạo một số ngẫu nhiên để quyết định di chuyển sang trái hay phải
+            # Time to move, generate a random number to decide to move left or right
             direction = random.choice(['left', 'right', 'up', 'down'])
             if direction == 'left'and self.x - self.movement_speed >= LEFT and (self.x - self.movement_speed, self.y) not in blocked_coordinates and (self.x - self.movement_speed, self.y) not in all_row_and_cloumn:
                 self.x -= self.movement_speed
@@ -155,11 +160,12 @@ class Bot:
                 self.y -= self.movement_speed
             elif direction == 'down' and self.y + self.movement_speed <= DOWN and (self.x, self.y + self.movement_speed) not in blocked_coordinates and (self.x, self.y + self.movement_speed) not in all_row_and_cloumn:
                 self.y += self.movement_speed
-            # Cập nhật thời gian di chuyển của bot
+            # Update bot travel time
             self.last_move_time = current_time
 
-# define bomb class
 wall_will_remove = []
+
+# define bomb class
 class Bomb:
     def __init__(self, x, y, image):
         self.x = x
@@ -169,13 +175,14 @@ class Bomb:
         self.exploded = False
         self.neighbor_explosions = []
         
+    # clear the wall if hit by an explosion
     def delete_wall(self ,test_x, test_y):
         if (test_x, test_y) in blocked_coordinates:
             blocked_coordinates.remove((test_x, test_y))
             wall_will_remove.append((test_x,test_y))
             pygame.display.update()
 
-
+    # check explosive zones and explosive cells
     def calculate_neighbor_explosions(self):
         neighbors = []
         
@@ -275,6 +282,7 @@ class Wall:
         self.y = y
         self.image = image
 
+    # function to draw wall on screen
     def draw(self, screen):
         screen.blit(self.image, (self.x, self.y))
 
@@ -284,6 +292,7 @@ class Button:
         self.rect = pygame.Rect(x, y, width, height)
         self.text = text
 
+    # function to draw button on screen
     def draw(self, screen):
         pygame.draw.rect(screen, (255, 255, 255), self.rect)
         font = pygame.font.SysFont('sans', 20)
@@ -291,18 +300,27 @@ class Button:
         text_rect = text.get_rect(center=self.rect.center)
         screen.blit(text, text_rect)
 
+# initialize the start button
 start_button = Button(350, 250, 200, 50, "Start Game")
+
+# initialize the quit button
 quit_button = Button(350, 325, 200, 50, "Quit Game")
+
+# initialize the win button
 win_button = Button(350, 300, 200, 50, "WIN")
+
+# initialize the lose button
 lose_button = Button(350, 300, 200, 50, "LOSE")
 
 # Initialize player object
 player = Player(player_start_x, player_start_y, player_image)
 
+# initialize bot objects
 bot1 = Bot(bot1_x, bot1_y, bot1_image)
 bot2 = Bot(bot2_x, bot2_y, bot2_image)
 bot3 = Bot(bot3_x, bot3_y, bot3_image)
 
+# get the coordinates of the bots
 bot1_pos = (bot1.x, bot1.y)
 bot2_pos = (bot2.x, bot2.y)
 bot3_pos = (bot3.x, bot3.y)
@@ -319,7 +337,6 @@ for wall_pos in wall_list:
     wall = Wall(wall_pos[0], wall_pos[1], wall_image)
     wall_objects.append(wall)
 
-
 for wall in wall_will_remove:
     wall_objects.remove(wall)
 
@@ -327,6 +344,7 @@ for wall in wall_will_remove:
 pygame.display.set_caption("Bomberman")
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
+# display menu on screen
 menu = True
 while menu:
     for event in pygame.event.get():
@@ -352,7 +370,8 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-            
+        
+        # Check moves and place bombs
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
                 player.move_up()
@@ -362,7 +381,9 @@ while running:
                 player.move_left()
             elif event.key == pygame.K_RIGHT:
                 player.move_right()
-            elif event.key == pygame.K_SPACE and not bomb:  # create bomb when space key is pressed
+
+            # create bomb when space key is pressed
+            elif event.key == pygame.K_SPACE and not bomb:  
                 bomb = Bomb(player.x, player.y, bomb_image)
                 bomb_sound.play()
                 
@@ -373,31 +394,36 @@ while running:
     for wall in wall_objects :
         if (wall.x, wall.y) not in wall_will_remove:
             wall.draw(screen)
-
     
+    # if the player places a bomb
     if bomb:
         bomb.draw(screen)
-        if pygame.time.get_ticks() > bomb.explode_time:  # explode bomb after 2 seconds
+        # explode bomb after 2 seconds
+        if pygame.time.get_ticks() > bomb.explode_time:  
 
             pos = bot1.x, bot1.y
+            # set the bot's coordinates outside the screen
             if pos in bomb.neighbor_explosions or pos == (bomb.x,bomb.y):
-                bot1.x = -10000  # set the bot's coordinates outside the screen
+                bot1.x = -10000  
                 bot1.y = -10000
                 bot1.update()
 
             pos2 = bot2.x, bot2.y
+            # set the bot's coordinates outside the screen
             if pos2 in bomb.neighbor_explosions or pos2 == (bomb.x,bomb.y):
-                bot2.x = -10000  # set the bot's coordinates outside the screen
+                bot2.x = -10000  
                 bot2.y = -10000
                 bot2.update()
                 
             pos3 = bot3.x, bot3.y
+            # set the bot's coordinates outside the screen
             if pos3 in bomb.neighbor_explosions or pos3 == (bomb.x,bomb.y):
-                bot3.x = -10000  # set the bot's coordinates outside the screen
+                bot3.x = -10000  
                 bot3.y = -10000
                 bot3.update()
 
             pos_player = player.x, player.y
+            # If the player is in the explosion zone, it won't show up on the screen
             if  pos_player in bomb.neighbor_explosions or pos_player == (bomb.x, bomb.y):
                 player.x = -10000
                 player.y = -10000   
@@ -407,15 +433,19 @@ while running:
     win = False
     lose = False
 
+    # check for collision between player and bot
     if (player.x, player.y) in [(bot1.x, bot1.y), (bot2.x, bot2.y), (bot3.x, bot3.y)]:
         lose = True
 
+    # check if the player has been hit by an explosive bomb
     if player.x < 0 and player.y < 0:
         lose = True
 
+    # check if all bots are hit by bombs
     if (bot1.x < 0) and (bot2.x < 0) and (bot3.x < 0):
         win = True
     
+    # loser screen
     while lose:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -431,6 +461,7 @@ while running:
 
         pygame.display.flip()
 
+    # victory screen
     while win:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -446,10 +477,12 @@ while running:
 
         pygame.display.flip()
 
+    # update bot posion
     bot1.update()
     bot2.update()
     bot3.update()
 
+    # draw objects
     player.draw(screen)
     bot1.draw(screen)
     bot2.draw(screen)
@@ -459,6 +492,22 @@ while running:
     # mouse_x, mouse_y = pygame.mouse.get_pos()
     # text_mouse = font_small.render("(" + str(mouse_x) + "," + str(mouse_y) + ")", True, BLACK)
     # screen.blit(text_mouse, (mouse_x + 10, mouse_y))
+
+    # print "player" on top player
+    text_player = font_small.render("Player", True, BLACK)
+    screen.blit(text_player, (player.x + 10, player.y - 10))
+
+    # print "black panther" on top bot 1
+    text_bot1 = font_small.render("Black panter", True, BLACK)
+    screen.blit(text_bot1, (bot1.x + 6, bot1.y - 10))
+
+    # print "Spiderman" on top bot 2
+    text_bot2 = font_small.render("Spiderman", True, BLACK)
+    screen.blit(text_bot2, (bot2.x + 6, bot2.y - 10))
+
+    # print "Ironman" on top bot 3
+    text_bot3 = font_small.render("Ironman", True, BLACK)
+    screen.blit(text_bot3, (bot3.x + 6, bot3.y - 10))
 
     # Update screen
     pygame.display.flip()
